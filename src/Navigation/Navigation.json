@@ -1,0 +1,20 @@
+{
+  "navigation": [
+    {
+      "name": "Homepage",
+      "url": "/citi/userhomepage"
+    },
+    {
+      "name": "User Shop",
+      "url": "/citi/shop"
+    },
+    {
+      "name": "Redeem Vouchers",
+      "url": "/citi/redeem"
+    },
+    {
+      "name": "Logout",
+      "url": "/"
+    }
+  ]
+}
