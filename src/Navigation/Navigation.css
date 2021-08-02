@@ -1,0 +1,10 @@
+.nav_logo {
+  height: 30%;
+  width: 50%;
+  margin-left: 15%;
+}
+
+.no_deco {
+  text-decoration: none;
+  color: white;
+}
