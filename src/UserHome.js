@@ -16,6 +16,7 @@ function UserHome() {
       console.log(items)
     });
   }
+  
   useEffect(() => {
     getUsers();
     // eslint-disable-next-line
