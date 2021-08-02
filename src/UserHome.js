@@ -1,7 +1,7 @@
-import database from "./firebase.js"
+import {database} from "./firebase.js"
 
 function UserHome() {
-  const response = database.collection("user/tom@gmail.com");
+  const response = database.collection("user/");
   return (
     <div>
       <h2>HOMEEEE</h2>
@@ -14,8 +14,4 @@ function UserHome() {
   )
 }
 
-const fetchdata=async()=>{
-  const response=database.collection('user');
-  const data=await response.get();
-}
 export default UserHome;
