@@ -51,7 +51,6 @@ function UserHome() {
   const ref = database.collection("voucher")
   const classes = useStyles();
 
-
 const userRef = database.collection("user").doc("tom@gmail.com")
 
   function getVouchers() {
