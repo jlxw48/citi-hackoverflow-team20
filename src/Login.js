@@ -42,7 +42,7 @@ const Login = (e) => {
   const classes = useStyles();
   const loginSubmit = (event) => {
     if (userType === "Customer") history.push("/citi/homepage");
-    else if (userType === "Cashier") history.push("/cashier/table");
+    else if (userType === "Cashier") history.push("/cashier/transaction");
   };
   const [userType, setUserType] = useState("Customer");
 
