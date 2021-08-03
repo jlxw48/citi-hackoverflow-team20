@@ -17,10 +17,10 @@ function App() {
         <Route exact path="/user/signup" component={UserSignUp} />
         <Route exact path="/cashier/signup" component={CashierSignUp} />
         <Route path="/citi" component={NavigationBar} />
-        <Route path="/citi/homepage" component={UserHome} />
-        <Route path="/citi/shop" component={UserShop} />
-        <Route path="/citi/redeem" component={UserRedeem} />
-        <Route path="/citi/cashier/:voucherid/" component={ScannedVoucherPage} />
+        <Route exact path="/citi/homepage" component={UserHome} />
+        <Route exact path="/citi/shop" component={UserShop} />
+        <Route exact path="/citi/redeem" component={UserRedeem} />
+        <Route exact path="/citi/cashier/:voucherid/" component={ScannedVoucherPage} />
       </Router>
     </>
   );
