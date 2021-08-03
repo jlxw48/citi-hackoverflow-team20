@@ -7,6 +7,7 @@ import NavigationBar from "./components/NavigationBar";
 import Login from "./Login";
 import ScannedVoucherPage from "./cashier/ScannedVoucherPage";
 import UserSignUp from "./UserSignUp";
+import CashierSignUp from "./CashierSignUp";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Router>
         <Route exact path="/" component={Login} />
         <Route exact path="/user/signup" component={UserSignUp} />
+        <Route exact path="/cashier/signup" component={CashierSignUp} />
         <Route path="/citi" component={NavigationBar} />
         <Route path="/citi/homepage" component={UserHome} />
         <Route path="/citi/shop" component={UserShop} />
