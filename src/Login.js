@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = (e) => {
-  const history = useHistory();
+const Login = (props) => {
+  var history = useHistory();
   const classes = useStyles();
   const [formData, setFormData] = useState({})
   const [collection, setCollection] = useState("user")
@@ -71,8 +71,11 @@ const Login = (e) => {
             console.log("hi toast")
             return;
           }
-  
-          history.push("/citi/homepage");
+
+          history.push({
+            pathname: '/citi/homepage',
+            state: { userid: doc.id }
+          })
         })
       })
       .catch(error => console.log(error.message))

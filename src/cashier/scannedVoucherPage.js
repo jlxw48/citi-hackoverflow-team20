@@ -60,7 +60,8 @@ function ScannedVoucherPage(props) {
                   .then(doc => {
                     const voucherDetails = {
                       ...docSnapshot.data(),
-                      value: doc.data().value
+                      value: doc.data().value,
+                      voucherid: docSnapshot.id
                     }
                     setVoucher(voucherDetails)
                   });

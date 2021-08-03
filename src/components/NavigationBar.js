@@ -23,6 +23,7 @@ import HomeIcon from "@material-ui/icons/Home";
 
 const NavigationBar = () => {
   const [open, setOpen] = React.useState(false);
+
   return (
     <React.Fragment>
       <AppBar position="static" style={{ backgroundColor: "blue" }}>
