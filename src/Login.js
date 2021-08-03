@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useHistory } from "react-router-dom";
 import {database, auth} from "./firebase.js"
+import { Toast, ToastContainer } from "react-bootstrap";
 
 const bcrypt = require('bcryptjs')
 
@@ -37,6 +38,9 @@ const Login = (e) => {
   const classes = useStyles();
   const [formData, setFormData] = useState({})
   const [collection, setCollection] = useState("user")
+  const [loginFailedToast, setLoginFailedToast] = useState(false)
+
+  const closeToast = () => setLoginFailedToast(false);
 
   const loginSubmit = (event) => {
     event.preventDefault()
@@ -54,6 +58,7 @@ const Login = (e) => {
 
         if (snapshot.empty) {
           console.log('No matching documents.');
+          setLoginFailedToast(true)
           return;
         } 
 
@@ -62,7 +67,8 @@ const Login = (e) => {
           const validPassword = bcrypt.compareSync(formData.password, doc.data().hash);
   
           if (!validPassword) {
-            history.push("/");
+            setLoginFailedToast(true)
+            console.log("hi toast")
             return;
           }
   
@@ -91,6 +97,15 @@ const Login = (e) => {
 
   return (
     <Container component="main" maxWidth="xs">
+      <ToastContainer position='top-end'>
+        <Toast show={loginFailedToast} onClose={closeToast}>
+          <Toast.Header>
+            <strong className="me-auto">Login Failed!</strong>
+          </Toast.Header>
+          <Toast.Body>Invalid email or password!</Toast.Body>
+        </Toast>
+      </ToastContainer>
+      
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>

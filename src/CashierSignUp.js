@@ -10,6 +10,7 @@ import Container from "@material-ui/core/Container";
 import { useHistory } from "react-router-dom";
 import {database, auth} from "./firebase.js"
 import { v4 as uuidv4 } from 'uuid';
+import { Toast, ToastContainer } from "react-bootstrap";
 
 const bcrypt = require('bcryptjs')
 const saltRounds = 10;
@@ -38,27 +39,43 @@ const CashierSignUp = (e) => {
   const history = useHistory();
   const classes = useStyles();
   const [formData, setFormData] = useState({})
+  const [showCashierExistsToast, setCashierExistsToast] = useState(false)
+  const closeToast = () => setCashierExistsToast(false);
+
   const signupSubmit = async (event) => {
     event.preventDefault();
     console.log(formData);
 
-    const hash = bcrypt.hashSync(formData.password, bcrypt.genSaltSync(saltRounds));
-    const uuid = uuidv4();
-
-    const cashierData = {
-        name: formData.name,
-        email: formData.email,
-        hash: hash
-    }
-
     await database.collection('cashier')
-        .doc(uuid)
-        .set(cashierData)
-        .catch(error => {
-            console.log('Something went wrong with added cashier to firestore: ', error);
-        })
+      .where('email', '==', formData.email)
+      .get()
+      .then(async (snapshots) => {
+        if (!snapshots.empty) {
+          setCashierExistsToast(true)
+          return;
+        } 
+        
+        const hash = bcrypt.hashSync(formData.password, bcrypt.genSaltSync(saltRounds));
+        const uuid = uuidv4();
+    
+        const cashierData = {
+            name: formData.name,
+            email: formData.email,
+            hash: hash
+        }
+    
+        await database.collection('cashier')
+            .doc(uuid)
+            .set(cashierData)
+            .catch(error => {
+                console.log('Something went wrong with added cashier to firestore: ', error);
+            })
+    
+        history.push("/");
 
-    history.push("/");
+      })
+
+    
   };
   
   const handleChange = (e) => {
@@ -70,6 +87,14 @@ const CashierSignUp = (e) => {
 
   return (
     <Container component="main" maxWidth="xs">
+      <ToastContainer position='top-end'>
+        <Toast show={showCashierExistsToast} onClose={closeToast}>
+          <Toast.Header>
+            <strong className="me-auto">Signup Failed!</strong>
+          </Toast.Header>
+          <Toast.Body>User with email already exists!</Toast.Body>
+        </Toast>
+      </ToastContainer>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
