@@ -53,7 +53,17 @@ function ScannedVoucherPage(props) {
         .then(docSnapshot => {
             if (docSnapshot.exists) {
               if (validateVoucher(docSnapshot.data())) {
-                setVoucher(docSnapshot.data())
+                docSnapshot
+                  .data()
+                  .vouchertype
+                  .get()
+                  .then(doc => {
+                    const voucherDetails = {
+                      ...docSnapshot.data(),
+                      value: doc.data().value
+                    }
+                    setVoucher(voucherDetails)
+                  });
               }
             } else {
                 console.log("voucher does not exist")
@@ -80,7 +90,7 @@ function ScannedVoucherPage(props) {
   useEffect(() => {
     const timer = setTimeout(() => {
       getVoucher();
-    }, 2000);
+    }, 0);
     return () => clearTimeout(timer);
   }, []);
 

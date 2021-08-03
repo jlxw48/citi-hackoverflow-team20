@@ -42,7 +42,7 @@ export default function ValidVoucher(props) {
                             return " null";
                           }
 
-                          return " " + voucher.name;
+                          return " " + voucher.value;
                         })()}
                       </>
                     </Typography>
