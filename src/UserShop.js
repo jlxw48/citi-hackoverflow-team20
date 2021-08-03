@@ -54,7 +54,9 @@ var span = document.getElementsByClassName("close")[0];
 function UserShop() {
   const [vouchers, setVouchers] = useState([])
   const ref = database.collection("voucher")
+  const ref2 = database.collection("user")
   const classes = useStyles();
+  const userRef = database.collection("user").doc("tom@gmail.com")
 
 
   function getVouchers() {
@@ -67,12 +69,22 @@ function UserShop() {
 
   useEffect(() => {
     getVouchers();
-    // eslint-disable-next-line
   }, []);
 
   btn.onclick = function() {
     modal.style.display = "block";
-};
+    ref2.doc("tom@gmail.com").update({loyalty: 38});
+    // need change to decrement instead of fixed number update
+
+    // add purchased voucher under the user's name
+    ref.add({
+        name:'voucher4',
+        details:'amazing',
+        user: userRef
+    });
+
+
+  };
 
 span.onclick = function() {
     modal.style.display = "none";
@@ -83,8 +95,6 @@ window.onclick = function(event) {
     modal.style.display = "none";
     }
 };
-
-
 
   return (
     <React.Fragment>
