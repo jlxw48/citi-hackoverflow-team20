@@ -7,6 +7,10 @@ function UserHome() {
   const [user, setUser] = useState([])
   const [loading, setLoading] = useState(true)
   useEffect(() => {
+    if (location.state === null) {
+      return;
+    }
+    
     getUsers(location.state.userid);
     // eslint-disable-next-line
   }, []);
