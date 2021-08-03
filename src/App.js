@@ -6,12 +6,14 @@ import UserRedeem from "./UserRedeem.js";
 import NavigationBar from "./components/NavigationBar";
 import Login from "./Login";
 import ScannedVoucherPage from "./cashier/ScannedVoucherPage";
+import UserSignUp from "./UserSignUp";
 
 function App() {
   return (
     <>
       <Router>
         <Route exact path="/" component={Login} />
+        <Route exact path="/user/signup" component={UserSignUp} />
         <Route path="/citi" component={NavigationBar} />
         <Route path="/citi/homepage" component={UserHome} />
         <Route path="/citi/shop" component={UserShop} />

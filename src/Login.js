@@ -8,6 +8,9 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useHistory } from "react-router-dom";
+import {database, auth} from "./firebase.js"
+
+const bcrypt = require('bcryptjs')
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,9 +35,59 @@ const useStyles = makeStyles((theme) => ({
 const Login = (e) => {
   const history = useHistory();
   const classes = useStyles();
+  const [formData, setFormData] = useState({})
+  const [collection, setCollection] = useState("user")
+
   const loginSubmit = (event) => {
-    history.push("/citi/homepage");
+    event.preventDefault()
+    console.log("logging in")
+    console.log(formData.email)
+
+    console.log(collection)
+
+    // get password hash from firebase
+    database.collection(collection)
+      .where('email', '==', formData.email)
+      .get()
+      .then(snapshot => {
+        console.log("snapshotting", snapshot)
+
+        if (snapshot.empty) {
+          console.log('No matching documents.');
+          return;
+        } 
+
+        snapshot.forEach(doc => {
+          // compare hash with hash of input password
+          const validPassword = bcrypt.compareSync(formData.password, doc.data().hash);
+  
+          if (!validPassword) {
+            history.push("/");
+            return;
+          }
+  
+          history.push("/citi/homepage");
+        })
+      })
+      .catch(error => console.log(error.message))
   };
+
+  const handleChange = (e) => {
+    setFormData({
+        ...formData,
+        [e.target.name]: e.target.value.trim()
+    })
+  }
+
+  const updateCollection = (e) => {
+    console.log("value", e.target.value)
+    if (e.target.value === "2") {
+      console.log("setting cashier")
+      setCollection("cashier")
+    } else {
+      setCollection("user")
+    }
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -46,7 +99,11 @@ const Login = (e) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} onSubmit={loginSubmit} noValidate>
+        <form className={classes.form} onSubmit={loginSubmit}>
+          <select name="logintype" onChange={updateCollection}>
+            <option value="1">User</option>
+            <option value="2">Cashier</option>
+          </select>
           <TextField
             variant="outlined"
             margin="normal"
@@ -56,7 +113,7 @@ const Login = (e) => {
             label="Email Address"
             name="email"
             autoComplete="email"
-            autoFocus
+            onChange={handleChange}
           />
           <TextField
             variant="outlined"
@@ -68,6 +125,7 @@ const Login = (e) => {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={handleChange}
           />
           <Button
             type="submit"
@@ -79,6 +137,10 @@ const Login = (e) => {
             Sign In
           </Button>
         </form>
+
+        <p>
+          Don't have a user account yet? Click <a href="/user/signup">here</a> to sign up!
+        </p>
       </div>
     </Container>
   );
