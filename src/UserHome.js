@@ -107,8 +107,8 @@ function UserHome() {
                         <div key={voucher.id}>
                         <h2>{voucher.name}</h2>
                         <p>{voucher.details}</p>
+                        <p>Expiry Date: {new Date(voucher.expiry.seconds*1000).toLocaleDateString()}</p>
                         </div>
-                      ))
                   </CardContent>
 
 
