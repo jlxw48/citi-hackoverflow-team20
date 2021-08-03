@@ -9,7 +9,7 @@ function UserHome() {
 
   function getUsers() {
     setLoading(true);
-    ref.get().then((item) => {
+    ref.where("email", "==", "tom@gmail.com").get().then((item) => {
       const items = item.docs.map((doc) => doc.data());
       setUsers(items);
       setLoading(false);
