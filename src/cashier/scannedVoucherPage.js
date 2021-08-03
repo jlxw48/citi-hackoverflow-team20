@@ -1,10 +1,47 @@
 import {database} from "../firebase.js"
 import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import ValidVoucher from "./components/ValidVoucherComponent.js";
+import InvalidVoucher from "./components/InvalidVoucherComponent.js";
+import { Spinner } from "react-bootstrap";
+
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    marginRight: theme.spacing(2),
+  },
+  heroContent: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(8, 0, 6),
+  },
+  heroButtons: {
+    marginTop: theme.spacing(4),
+  },
+  cardGrid: {
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(8),
+  },
+  card: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  cardMedia: {
+    paddingTop: '56.25%', // 16:9
+  },
+  cardContent: {
+    flexGrow: 1,
+  },
+  footer: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(6),
+  },
+}));
 
 function ScannedVoucherPage(props) {
   const [voucher, setVoucher] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [validVoucher, setValidVoucher] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const classes = useStyles();
 
   const voucherCollection = database.collection("voucher")
 
@@ -15,8 +52,9 @@ function ScannedVoucherPage(props) {
         .get()
         .then(docSnapshot => {
             if (docSnapshot.exists) {
+              if (validateVoucher(docSnapshot.data())) {
                 setVoucher(docSnapshot.data())
-                console.log(docSnapshot.data())
+              }
             } else {
                 console.log("voucher does not exist")
             }
@@ -24,34 +62,52 @@ function ScannedVoucherPage(props) {
         });
   }
 
-  function validateVoucher() {
+  function validateVoucher(voucher) {
     if (voucher === null) {
         return false;    
     }
     if (voucher.expiry) {
         if (voucher.expiry.toMillis() < Date.now()) {
             console.log("voucher expired")
+            return false;
         } else {
-            setValidVoucher(true)
             console.log("voucher expiry not yet", voucher.expiry)
+            return true;
         }
     }
   }
 
   useEffect(() => {
-    getVoucher();
-    // eslint-disable-next-line
+    const timer = setTimeout(() => {
+      getVoucher();
+    }, 2000);
+    return () => clearTimeout(timer);
   }, []);
-
-  useEffect(() => {
-    validateVoucher();
-    // eslint-disable-next-line
-  }, [voucher]);
 
   return (
     <div>
-        {loading ? <h2>Loading...</h2> : voucher === null ? <h2>Invalid Voucher</h2> : <h2>Valid Voucher</h2>}
+      <main>
+        <div className={classes.heroContent}>
+          <Container maxWidth="md" align="center">
+            {loading ? <h1>Checking Voucher Status...</h1> : voucher === null ? <h1>Invalid Voucher</h1> : <h1>Valid Voucher</h1>}
+          </Container>
+        </div>
+
+        <div style={{display: 'flex', justifyContent:'center', alignItems:'center'}}>
+          {(() => {
+            if (loading) {
+              return <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>
+            } else {
+              if (!voucher) {
+                return <InvalidVoucher classes={classes}></InvalidVoucher>
+              }
+  
+              return <ValidVoucher voucher={voucher} classes={classes}></ValidVoucher>
+            }
+          })()}
+        </div>
         
+      </main>
     </div>
   )
 }

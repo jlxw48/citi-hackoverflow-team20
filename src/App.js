@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import UserHome from "./UserHome.js";
 import UserShop from "./UserShop.js";
 import UserRedeem from "./UserRedeem.js";
-import NavigationBar from "./Navigation/NavigationBar";
+import NavigationBar from "./components/NavigationBar";
 import Login from "./Login";
-import ScannedVoucherPage from "./cashier/scannedVoucherPage";
+import ScannedVoucherPage from "./cashier/ScannedVoucherPage";
 
 function App() {
   return (
