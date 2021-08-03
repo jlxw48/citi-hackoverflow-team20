@@ -64,27 +64,29 @@ function UserShop() {
       console.log(items)
     });
   }
+
   useEffect(() => {
     getVouchers();
     // eslint-disable-next-line
   }, []);
 
-    btn.onclick = function() {
-        modal.style.display = "block";
-    };
+  btn.onclick = function() {
+    modal.style.display = "block";
+};
 
-    span.onclick = function() {
-        modal.style.display = "none";
-    };
+span.onclick = function() {
+    modal.style.display = "none";
+};
 
-    window.onclick = function(event) {
-        if (event.target == modal) {
-        modal.style.display = "none";
-        }
-    };
+window.onclick = function(event) {
+    if (event.target == modal) {
+    modal.style.display = "none";
+    }
+};
+
+
+
   return (
-
-
     <React.Fragment>
       <CssBaseline />
       <main>
