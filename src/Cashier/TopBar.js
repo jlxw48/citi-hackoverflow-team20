@@ -9,7 +9,7 @@ const TopBar = () => {
       <AppBar
         position="static"
         style={{
-          backgroundColor: "blue",
+          backgroundColor: "red",
           display: "flex",
           flexDirection: "row",
           padding: "3px",
