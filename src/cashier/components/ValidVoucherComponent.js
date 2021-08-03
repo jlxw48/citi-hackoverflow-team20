@@ -5,10 +5,19 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import {database} from "../../firebase.js"
 
 export default function ValidVoucher(props) {
     const classes = props.classes;
     const voucher = props.voucher;
+    console.log("hiii", voucher);
+
+    const updateVoucherStatus = async () => {
+        await database.collection('voucher').doc(voucher.voucherid)
+          .update({
+            status: false
+          })
+    }
 
     return (
         <Container className={classes.cardGrid} maxWidth="md">
@@ -90,7 +99,7 @@ export default function ValidVoucher(props) {
                   <div className={classes.heroButtons}>
                     <Grid container spacing={2} style={{display: 'flex', justifyContent:'center', alignItems:'center', marginBottom: 20 }}>
                       <Grid item>
-                        <Button variant="contained" color="primary">
+                        <Button variant="contained" color="primary" onClick={updateVoucherStatus} >
                           Redeem
                         </Button>
                       </Grid>
