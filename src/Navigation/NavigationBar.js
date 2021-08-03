@@ -5,7 +5,8 @@ import {
   IconButton,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useState, useEffect } from 'react';
+import {database} from "../firebase.js"
 import "react-sidebar-ui/dist/index.css";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import List from "@material-ui/core/List";
@@ -20,9 +21,26 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import RedeemIcon from "@material-ui/icons/Redeem";
 import "./Navigation.css";
 import HomeIcon from "@material-ui/icons/Home";
+import { PowerInputTwoTone } from "@material-ui/icons";
 
 const NavigationBar = () => {
   const [open, setOpen] = React.useState(false);
+
+  // const [point, setPoints] = useState([])
+  
+  // const userRef = database.collection("user").doc("tom@gmail.com")
+
+  // function getPoints() {
+  //   userRef.get().then((item) => {
+  //     const items = item.docs.map((doc) => doc.data());
+  //     setPoints(items);
+  //   });
+  // }
+  // useEffect(() => {
+  //   getPoints();
+  //   // eslint-disable-next-line
+  // }, []);
+
   return (
     <React.Fragment>
       <AppBar position="static" style={{ backgroundColor: "blue" }}>
@@ -39,6 +57,11 @@ const NavigationBar = () => {
           <Typography className="no_deco" variant="h6">
             CitiMall
           </Typography>
+          {/* {point.map((p) => (
+          <Typography className="no_deco" variant="h6">
+            {p}
+          </Typography>
+          ))} */}
         </Toolbar>
       </AppBar>
       <SwipeableDrawer

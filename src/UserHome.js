@@ -51,7 +51,7 @@ function UserHome() {
   const ref = database.collection("voucher")
   const classes = useStyles();
 
-const userRef = database.collection("user").doc("tom@gmail.com")
+  const userRef = database.collection("user").doc("tom@gmail.com")
 
   function getVouchers() {
     ref.where("user", "==", userRef).get().then((item) => {
@@ -83,7 +83,7 @@ const userRef = database.collection("user").doc("tom@gmail.com")
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justifyContent="center">
                 <Grid item>
-                  <Button variant="contained" color="primary">
+                  <Button variant="contained" color="primary" onClick={event =>  window.location.href='/citi/shop'}>
                     Purchase More Vouchers!
                   </Button>
                 </Grid>
@@ -117,7 +117,7 @@ const userRef = database.collection("user").doc("tom@gmail.com")
 
 
                   <CardActions>
-                    <Button size="small" color="primary">
+                    <Button size="small" color="primary"  onClick={event =>  window.location.href='/citi/redeem'}>
                       Redeem
                     </Button>
                   </CardActions>
