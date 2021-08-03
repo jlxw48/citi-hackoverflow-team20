@@ -51,8 +51,11 @@ function UserHome() {
   const ref = database.collection("voucher")
   const classes = useStyles();
 
+
+const userRef = database.collection("user").doc("tom@gmail.com")
+
   function getVouchers() {
-    ref.get().then((item) => {
+    ref.where("user", "==", userRef).get().then((item) => {
       const items = item.docs.map((doc) => doc.data());
       setVouchers(items);
       console.log(items)
@@ -63,7 +66,9 @@ function UserHome() {
     // eslint-disable-next-line
   }, []);
 
+
   return (
+
     <React.Fragment>
       <CssBaseline />
       <main>
