@@ -45,15 +45,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-
 
 function UserHome() {
   const [vouchers, setVouchers] = useState([])
-
   const ref = database.collection("voucher")
-
   const classes = useStyles();
 
   function getVouchers() {
@@ -92,33 +87,42 @@ function UserHome() {
             </div>
           </Container>
         </div>
+
+
+
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
-          <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card className={classes.card}>
+          <Grid container spacing={5}>
+            {vouchers.map((voucher) => (
+              <Grid item xs={12} sm={6} md={4}>
+                <Card className={classes.voucher}>
+
                   <CardMedia
                     className={classes.cardMedia}
                     image="https://source.unsplash.com/random"
                     title="Image title"
                   />
+
                   <CardContent className={classes.cardContent}>
-                  {vouchers.map((voucher) => (
                         <div key={voucher.id}>
                         <h2>{voucher.name}</h2>
                         <p>{voucher.details}</p>
                         </div>
-                      ))}
+                      ))
                   </CardContent>
+
+
                   <CardActions>
                     <Button size="small" color="primary">
                       Redeem
                     </Button>
                   </CardActions>
+
                 </Card>
+
               </Grid>
             ))}
+
           </Grid>
         </Container>
       </main>
