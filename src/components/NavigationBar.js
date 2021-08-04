@@ -21,12 +21,13 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import RedeemIcon from "@material-ui/icons/Redeem";
 import "./Navigation.css";
 import HomeIcon from "@material-ui/icons/Home";
-import { Redirect, useLocation } from "react-router-dom";
+import { Redirect, useLocation, useHistory } from "react-router-dom";
 
 const NavigationBar = (props) => {
   const [open, setOpen] = React.useState(false);
   const [user, setUser] = useState([]);
   const location = useLocation();
+  const history = useHistory();
 
   useEffect(() => {
     if (!location.state) {
@@ -87,7 +88,15 @@ const NavigationBar = (props) => {
                   onClick={() => itemOnTap(jsonObj.name)}
                   style={{ display: "flex", flexDirection: "row" }}
                 >
-                  <ListItem button component={Link} to={jsonObj.url}>
+                  <ListItem button onClick={() => 
+                          {
+                            console.log(jsonObj.url);
+                            history.push({
+                              pathname: jsonObj.url,
+                              state: { userid: location.state.userid }
+                            })
+                          }
+                        }>
                     <ListItemIcon>
                       {jsonObj.name === Navjson.navigation[0].name ? (
                         <HomeIcon />

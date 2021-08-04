@@ -155,7 +155,6 @@ function UserShop() {
                         </div>
                   </CardContent>
 
-
                   <CardActions>
                     <Button size="small" color="primary" id="myBtn" onClick={() => purchaseVoucher(VT)}>
                       Purchase
@@ -166,10 +165,7 @@ function UserShop() {
                             <span class="close" onClick={closeModal}>&times;</span>
                             <p>Voucher Purchased!</p>
                         </div>
-
                     </div>
-
-
                   </CardActions>
 
                 </Card>
