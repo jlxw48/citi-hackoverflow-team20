@@ -64,10 +64,12 @@ function UserShop() {
     return <Redirect to="/"></Redirect>;
   }
 
+
   const voucherTypeRef = database.collection("vouchertype");
   const refV = database.collection("voucher");
   const userRef = database.collection("user").doc(location.state.userid);
   var modal = document.getElementById("myModal");
+
 
   async function getVouchers() {
     await voucherTypeRef.get().then((item) => {
@@ -186,6 +188,8 @@ function UserShop() {
                       <div key={VT.id}>
                         <h2>{VT.name}</h2>
                         <p>{VT.details}</p>
+                        <p>Loyalty Points: {VT.points}</p>
+                        <p>Value: {VT.value}% OFF</p>
                         <p>
                           Expiry Date:{" "}
                           {new Date(VT.expiry).toLocaleDateString()}
@@ -194,14 +198,27 @@ function UserShop() {
                     </CardContent>
 
                     <CardActions>
-                      <Button
+
+                      {
+                        if (VT.points <= userRef.loyalty) {
+
+                          <Button
                         size="small"
                         color="primary"
                         id="myBtn"
                         onClick={() => purchaseVoucher(VT)}
-                      >
+                        >
+
                         Purchase
+                        
                       </Button>
+                        }
+                        else {
+
+                        }
+                      }
+
+                    
 
                       <div id="myModal" class="modal">
                         <div class="modal-content">
