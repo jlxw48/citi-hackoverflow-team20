@@ -6,16 +6,15 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useState, useEffect } from 'react';
-import {database} from "../firebase.js"
+import {database} from "../../firebase.js"
 import "react-sidebar-ui/dist/index.css";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import List from "@material-ui/core/List";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import MenuIcon from "@material-ui/icons/Menu";
-import { Link } from "react-router-dom";
 import Navjson from "./Navigation.json";
-import Logo from "./../Asset/citilogo.png";
+import Logo from "../Asset/citilogo.png";
 import StoreIcon from "@material-ui/icons/Store";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import RedeemIcon from "@material-ui/icons/Redeem";

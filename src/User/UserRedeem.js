@@ -11,6 +11,8 @@ import Hidden from '@material-ui/core/Hidden';
 import CardActions from '@material-ui/core/CardActions';
 import Container from '@material-ui/core/Container';
 import QRCode from "qrcode.react"
+import { Redirect, useLocation } from "react-router-dom";
+import NavigationBar from "./components/NavigationBar.js";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -29,69 +31,104 @@ const useStyles = makeStyles((theme) => ({
 function UserRedeem(props) {
   const classes = useStyles();
   const voucherID = props.match.params.voucherid
-  console.log(voucherID)
-
   const [vouchers, setVouchers] = useState([])
-  const ref = database.collection("voucher")
-
-  function getVouchers() {
-    database.collection("voucher").where('__name__', '==' , voucherID).get().then((snapshot) => {
-      const v = snapshot.docs.map((doc) => doc.data());
-      setVouchers(v);
-      console.log(vouchers);
-    });
-  }
+  const location = useLocation();
+  
   useEffect(() => {
+    if (!location.state) {
+      return ;
+    } 
     getVouchers();
     // eslint-disable-next-line
   }, []);
+
+  if (!location.state) {
+    return <Redirect to='/'></Redirect>
+  }
+
+  const userRef = database.collection("user").doc(location.state.userid)
+  const voucherRef = database.collection("voucher")
+
+  function getVouchers() {
+    // get vouchers which belong to a user
+    // userRef.get()
+    //   .then(docSnapshot => {
+    //     const vouchers = docSnapshot.data().purchased
+    //     const voucherObjArr = []
+
+    //     // get the voucher data
+    //     vouchers.forEach(async v => {
+    //       console.log(v)
+    //       await voucherRef.doc(v).get().then(doc => {
+    //         console.log(doc, doc.id)
+    //         voucherObjArr.push({
+    //           ...doc.data(),
+    //           id: doc.id
+    //         })
+    //       })
+    //     })
+
+    //     setVouchers(voucherObjArr);
+    //   })
+
+    // get vouchers
+
+    database.collection("voucher").where('__name__', '==' , voucherID).get().then((snapshot) => {
+      const v = snapshot.docs.map((doc) => doc.data());
+      setVouchers(v);
+    });
+  }
   
   return (
-    <Container maxWidth="lg">
-    <Grid item xs={12} lg={12}>
-      {vouchers.map((voucher) => (
-      <CardActionArea component="a" href="#">
-        <Card className={classes.card}>
-          <div className={classes.cardDetails}>
-          <div key={voucher.id}>
-            <CardContent>
-              <Typography component="h1" variant="h4" >
-                {voucher.name}
-              </Typography>
-              <Typography variant="subtitle1" color="textSecondary">
-              {/* Expiry Date: {new Date(voucher.expiry.seconds*1000).toLocaleDateString()} */}
-              </Typography>
-              <Typography variant="subtitle1" paragraph>
-                {voucher.details}
-              </Typography>
-              <Typography component="h6" variant="h6">
-                Terms and Condition:
-              </Typography>
+    <div>
+      <NavigationBar />
+      <Container maxWidth="lg">
+        <Grid item xs={12} lg={12}>
+        {vouchers.map((voucher) => (
+        <CardActionArea component="a" href="#">
+          <Card className={classes.card}>
+            <div className={classes.cardDetails}>
+            <div key={voucher.id}>
+              <CardContent>
+                <Typography component="h1" variant="h4" >
+                  {voucher.name}
+                </Typography>
+                <Typography variant="subtitle1" color="textSecondary">
+                {/* Expiry Date: {new Date(voucher.expiry.seconds*1000).toLocaleDateString()} */}
+                </Typography>
+                <Typography variant="subtitle1" paragraph>
+                  {voucher.details}
+                </Typography>
+                <Typography component="h6" variant="h6">
+                  Terms and Condition:
+                </Typography>
 
-              <Typography variant="subtitle1">
-                
-                <p>1. Information on how to participate forms part of these Terms & Conditions. By participating, claimants agree to be bound by these Terms & Conditions. Claimants must comply with these Terms & Conditions for a coupon to be valid.</p>
+                <Typography variant="subtitle1">
+                  
+                  <p>1. Information on how to participate forms part of these Terms & Conditions. By participating, claimants agree to be bound by these Terms & Conditions. Claimants must comply with these Terms & Conditions for a coupon to be valid.</p>
 
-                <p>2. Each claimant is entitled to one coupon per accommodation establishment. Coupons are not transferable and are not redeemable for cash and cannot be combined with any other coupons or any other offer or discounts or promotions offered by Quovai.</p>
+                  <p>2. Each claimant is entitled to one coupon per accommodation establishment. Coupons are not transferable and are not redeemable for cash and cannot be combined with any other coupons or any other offer or discounts or promotions offered by Quovai.</p>
 
-                <p>3. Each coupon is identified by a code and has different rewards. The claimant can decide the reward desired during the booking phase whilst being bound by the conditions linked to the redemption of the coupon.</p>
-              </Typography>
-                  <CardActions>
-                  <br></br>
-                  <QRCode style = {{marginLeft: "50px", marginTop: "50px"}} value = "0.4" justifyContent="center">
-                    </QRCode>
-                  </CardActions>
-            </CardContent>
+                  <p>3. Each coupon is identified by a code and has different rewards. The claimant can decide the reward desired during the booking phase whilst being bound by the conditions linked to the redemption of the coupon.</p>
+                </Typography>
+                    <CardActions>
+                    <br></br>
+                    <QRCode style = {{marginLeft: "50px", marginTop: "50px"}} value = "0.4" justifyContent="center">
+                      </QRCode>
+                    </CardActions>
+              </CardContent>
+              </div>
             </div>
-          </div>
-          <Hidden xsDown>
-            <CardMedia className={classes.cardMedia} image="https://source.unsplash.com/random" title="Image Title" />
-          </Hidden>
-        </Card>
-      </CardActionArea>
-    ))}
-    </Grid>
+            <Hidden xsDown>
+              <CardMedia className={classes.cardMedia} image="https://source.unsplash.com/random" title="Image Title" />
+            </Hidden>
+          </Card>
+        </CardActionArea>
+      ))}
+      </Grid>
     </Container>
+    </div>
+    
   );
 }
 

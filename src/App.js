@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import UserHome from "./User/UserHome.js";
 import UserShop from "./User/UserShop.js";
 import UserRedeem from "./User/UserRedeem.js";
-import NavigationBar from "./components/NavigationBar";
 import Login from "./Login";
 import QRScan from "./cashier/QRScan";
 import Transaction from "./cashier/Transaction";
@@ -20,7 +19,6 @@ function App() {
         <Route exact path="/" component={Login} />
         <Route exact path="/user/signup" component={UserSignUp} />
         <Route exact path="/cashier/signup" component={CashierSignUp} />
-        {/* <Route path="/citi" component={NavigationBar} /> */}
 
         <Route path="/cashier" component={TopBar} />
         <Route exact path="/cashier/qr" component={QRScan} />
