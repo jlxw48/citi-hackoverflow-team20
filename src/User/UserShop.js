@@ -64,12 +64,13 @@ function UserShop() {
     return <Redirect to='/'></Redirect>
   }
 
-  const voucherRef = database.collection("vouchertype")
+  const voucherTypeRef = database.collection("vouchertype")
+  const refV = database.collection("voucher")
   const userRef = database.collection("user").doc(location.state.userid)
   var modal = document.getElementById("myModal");
 
   async function getVouchers() {
-    await voucherRef.get().then((item) => {
+    await voucherTypeRef.get().then((item) => {
       const items = item.docs.map((doc) => doc.data());
       setVouchers(items);
       console.log("vouchers", items)
@@ -77,17 +78,27 @@ function UserShop() {
     });
   }
 
-  const buyVoucher = (voucherPoints, voucherid) => {
+  function purchaseVoucher(VT) {
     modal.style.display = "block";
-    // get this user's points
 
-    userRef.get()
-      .then(async docSnapshot => {
-        var points = docSnapshot.data().loyalty
-        var purchased = docSnapshot.data().purchased
-        await userRef.update({
-          loyalty: points - voucherPoints,
-          purchased: purchased.push(voucherid)
+    refV.add({
+      name: VT.name,
+      details: VT.details,
+      user: userRef,
+      vouchertype: VT,
+      expiry: VT.expiry
+    })
+      .then(docRef => {
+        userRef.get()
+        .then(async docSnapshot => {
+          var points = docSnapshot.data().loyalty
+          console.log(points)
+          console.log(VT.id)
+          var purchased = [...docSnapshot.data().purchased, docRef.id]
+          await userRef.update({
+            loyalty: points - VT.points,
+            purchased: purchased
+          })
         })
       })
   }
@@ -106,7 +117,7 @@ function UserShop() {
     <div>
       <NavigationBar userid={location.state.userid}/>
 
-<React.Fragment>
+    <React.Fragment>
       <CssBaseline />
       <main>
         {/* Hero unit */}
@@ -126,7 +137,7 @@ function UserShop() {
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={5}>
-            {vouchers.map((voucher) => (
+            {vouchers.map((VT) => (
               <Grid item xs={12} sm={6} md={4}>
                 <Card className={classes.voucher}>
 
@@ -137,16 +148,16 @@ function UserShop() {
                   />
 
                   <CardContent className={classes.cardContent}>
-                        <div key={voucher.id}>
-                        <h2>{voucher.name}</h2>
-                        <p>{voucher.details}</p>
-                        <p>Expiry Date: {new Date(voucher.expiry).toLocaleDateString()}</p>
+                        <div key={VT.id}>
+                        <h2>{VT.name}</h2>
+                        <p>{VT.details}</p>
+                        <p>Expiry Date: {new Date(VT.expiry).toLocaleDateString()}</p>
                         </div>
                   </CardContent>
 
 
                   <CardActions>
-                    <Button size="small" color="primary" id="myBtn" onClick={() => buyVoucher(voucher.points, voucher.id)}>
+                    <Button size="small" color="primary" id="myBtn" onClick={() => purchaseVoucher(VT)}>
                       Purchase
                     </Button>
 
