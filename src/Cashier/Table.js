@@ -7,7 +7,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { TableFooter } from "@material-ui/core";
-import BLUE from "./../utils/Color";
+import BLUE from "../utils/Color";
 
 function createData(name, price) {
   return { name, price };

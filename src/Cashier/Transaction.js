@@ -2,7 +2,7 @@ import React from "react";
 import Table from "./Table";
 import Button from "@material-ui/core/Button";
 import { Redirect, Link, useLocation } from "react-router-dom";
-import BLUE from "./../utils/Color";
+import BLUE from "../utils/Color";
 
 const Transaction = () => {
   const location = useLocation();
