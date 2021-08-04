@@ -49,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 function UserShop() {
   const [vouchers, setVouchers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loyalty, setLoyalty] = useState(true);
   const location = useLocation();
   const classes = useStyles();
 
@@ -58,6 +59,7 @@ function UserShop() {
     }
 
     getVouchers();
+    getLoyalty();
   }, []);
 
   if (!location.state) {
@@ -76,6 +78,14 @@ function UserShop() {
       const items = item.docs.map((doc) => doc.data());
       setVouchers(items);
       console.log("vouchers", items);
+      setLoading(false);
+    });
+  }
+
+  async function getLoyalty() {
+    await userRef.get().then((doc) => {
+      console.log(doc.data())
+      setLoyalty(doc.data().loyalty)
       setLoading(false);
     });
   }
@@ -199,26 +209,33 @@ function UserShop() {
 
                     <CardActions>
 
-                      {
-                        if (VT.points <= userRef.loyalty) {
+                    <> 
+                      {(() => {
+                        if (VT.points <= loyalty) {
 
-                          <Button
-                        size="small"
-                        color="primary"
-                        id="myBtn"
-                        onClick={() => purchaseVoucher(VT)}
-                        >
-
-                        Purchase
-                        
-                      </Button>
+                          return <Button
+                            size="small"
+                            color="primary"
+                            id="myBtn"
+                            onClick={() => purchaseVoucher(VT)}
+                            >
+                              Purchase
+                          </Button>
                         }
                         else {
-
+                          return <Button
+                            size="small"
+                            color="primary"
+                            id="myBtn"
+                            disabled
+                            >
+                              Purchase
+                          </Button>
                         }
-                      }
+                      })()}
+                      </>
 
-                    
+
 
                       <div id="myModal" class="modal">
                         <div class="modal-content">
