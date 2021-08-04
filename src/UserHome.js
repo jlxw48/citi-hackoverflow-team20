@@ -52,7 +52,7 @@ function UserHome() {
   const ref = database.collection("voucher")
   const classes = useStyles();
 
-const userRef = database.collection("user").doc("tom@gmail.com")
+const userRef = database.collection("user").doc("96da117d-1573-43a2-9b87-7e6cf23d22fc")
 
 
   function getVouchers() {
