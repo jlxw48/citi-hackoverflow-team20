@@ -8,7 +8,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 const QRScan = () => {
-  const [result, setResult] = useState("No QR Detected");
+  const [result, setResult] = useState("");
   const [open, setOpen] = useState(false);
   const history = useHistory();
   const handleClose = () => {
@@ -16,19 +16,16 @@ const QRScan = () => {
   };
   const handleRedeem = () => {
     history.push({
-      pathname: "/Cashier/Transaction",
-      state: {
-        data: result,
-      },
+      pathname: "/cashier/voucher/" + result,
     });
   };
   const handleScan = (data) => {
     if (data) {
       try {
-        setResult(Number(data));
+        setResult(data);
         setOpen(true);
       } catch (e) {
-        setResult("Incorrect Data Format!");
+        alert(e);
       }
     }
   };
@@ -57,7 +54,7 @@ const QRScan = () => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Voucher of {result * 100}% detected. Do you want to redeem it now?
+            Voucher {result} detected. Do you want to redeem it now?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

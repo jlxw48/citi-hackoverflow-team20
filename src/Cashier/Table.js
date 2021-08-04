@@ -29,11 +29,11 @@ export default function BasicTable(props) {
       totalPrice += e.price;
     });
     if (total === true) return totalPrice;
-    else return (1 - discount) * totalPrice;
+    else return (1 - discount / 100) * totalPrice;
   };
   const foot = [
     createData("Total Before Discount", calcTotal(0, true)),
-    createData("Discount", discount * 100),
+    createData("Discount", discount),
     createData("Total After Discount", calcTotal(0, false)),
   ];
 
