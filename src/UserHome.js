@@ -55,9 +55,11 @@ function UserHome() {
 
   function getVouchers() {
     ref.where("user", "==", userRef).get().then((item) => {
-      const items = item.docs.map((doc) => doc.data());
+      const items = item.docs.map((doc) => {
+        const voucher = {...doc.data(), id: doc.id}
+        return voucher;
+      });
       setVouchers(items);
-      console.log(items)
     });
   }
   useEffect(() => {
@@ -97,7 +99,10 @@ function UserHome() {
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={5}>
-            {vouchers.map((voucher) => (
+            {vouchers.map((voucher) => {
+              const voucherID = voucher.id
+              return (
+              
               <Grid item xs={12} sm={6} md={4}>
                 <Card className={classes.voucher}>
 
@@ -111,13 +116,13 @@ function UserHome() {
                         <div key={voucher.id}>
                         <h2>{voucher.name}</h2>
                         <p>{voucher.details}</p>
-                        <p>Expiry Date: {new Date(voucher.expiry.seconds*1000).toLocaleDateString()}</p>
+                        {/* <p>Expiry Date: {new Date(voucher.expiry.seconds*1000).toLocaleDateString()}</p> */}
                         </div>
                   </CardContent>
 
 
                   <CardActions>
-                    <Button size="small" color="primary"  onClick={event =>  window.location.href='/citi/redeem'}>
+                    <Button size="small" color="primary"  onClick={event =>  window.location.href='/citi/redeem/' + voucherID}>
                       Redeem
                     </Button>
                   </CardActions>
@@ -125,7 +130,7 @@ function UserHome() {
                 </Card>
 
               </Grid>
-            ))}
+            )})}
 
           </Grid>
         </Container>

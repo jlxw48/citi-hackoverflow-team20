@@ -11,6 +11,7 @@ import Hidden from '@material-ui/core/Hidden';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
+import QRCode from "qrcode.react"
 
 
 
@@ -29,19 +30,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function UserRedeem() {
+function UserRedeem(props) {
   const classes = useStyles();
+  const voucherID = props.match.params.voucherid
+  console.log(voucherID)
 
   const [vouchers, setVouchers] = useState([])
   const ref = database.collection("voucher")
-  
-  const userRef = database.collection("user").doc("tom@gmail.com")
 
   function getVouchers() {
-    ref.where("user", "==", userRef).get().then((item) => {
-      const items = item.docs.map((doc) => doc.data());
-      setVouchers(items);
-      console.log(items)
+    database.collection("voucher").where('__name__', '==' , voucherID).get().then((snapshot) => {
+      const v = snapshot.docs.map((doc) => doc.data());
+      setVouchers(v);
+      console.log(vouchers);
     });
   }
   useEffect(() => {
@@ -51,8 +52,7 @@ function UserRedeem() {
   
   return (
     <Container maxWidth="lg">
-    <Grid item xs={15} lg={15}>
-    {/*   */}
+    <Grid item xs={12} lg={12}>
       {vouchers.map((voucher) => (
       <CardActionArea component="a" href="#">
         <Card className={classes.card}>
@@ -63,7 +63,7 @@ function UserRedeem() {
                 {voucher.name}
               </Typography>
               <Typography variant="subtitle1" color="textSecondary">
-              Expiry Date: {new Date(voucher.expiry.seconds*1000).toLocaleDateString()}
+              {/* Expiry Date: {new Date(voucher.expiry.seconds*1000).toLocaleDateString()} */}
               </Typography>
               <Typography variant="subtitle1" paragraph>
                 {voucher.details}
@@ -81,9 +81,9 @@ function UserRedeem() {
                 <p>3. Each coupon is identified by a code and has different rewards. The claimant can decide the reward desired during the booking phase whilst being bound by the conditions linked to the redemption of the coupon.</p>
               </Typography>
                   <CardActions>
-                    <Button size="big" color="primary" variant = "outlined" onClick={event =>  window.location.href='/citi/qr'}>
-                      Click to generate QR Code
-                    </Button>
+                  <br></br>
+                  <QRCode style = {{marginLeft: "50px", marginTop: "50px"}} value = "0.4" justifyContent="center">
+                    </QRCode>
                   </CardActions>
             </CardContent>
             </div>
