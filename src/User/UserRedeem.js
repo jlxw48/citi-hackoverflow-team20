@@ -9,12 +9,10 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Hidden from '@material-ui/core/Hidden';
 import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import QRCode from "qrcode.react"
-
-
-
+import { Redirect, useLocation } from "react-router-dom";
+import NavigationBar from "./components/NavigationBar.js";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -33,22 +31,53 @@ const useStyles = makeStyles((theme) => ({
 function UserRedeem(props) {
   const classes = useStyles();
   const voucherID = props.match.params.voucherid
-  console.log(voucherID)
-
   const [vouchers, setVouchers] = useState([])
-  const ref = database.collection("voucher")
-
-  function getVouchers() {
-    database.collection("voucher").where('__name__', '==' , voucherID).get().then((snapshot) => {
-      const v = snapshot.docs.map((doc) => doc.data());
-      setVouchers(v);
-      console.log(vouchers);
-    });
-  }
+  const location = useLocation();
+  
   useEffect(() => {
+    if (!location.state) {
+      return ;
+    } 
     getVouchers();
     // eslint-disable-next-line
   }, []);
+
+  if (!location.state) {
+    return <Redirect to='/'></Redirect>
+  }
+
+  const userRef = database.collection("user").doc(location.state.userid)
+  const voucherRef = database.collection("voucher")
+
+  function getVouchers() {
+    // get vouchers which belong to a user
+    // userRef.get()
+    //   .then(docSnapshot => {
+    //     const vouchers = docSnapshot.data().purchased
+    //     const voucherObjArr = []
+
+    //     // get the voucher data
+    //     vouchers.forEach(async v => {
+    //       console.log(v)
+    //       await voucherRef.doc(v).get().then(doc => {
+    //         console.log(doc, doc.id)
+    //         voucherObjArr.push({
+    //           ...doc.data(),
+    //           id: doc.id
+    //         })
+    //       })
+    //     })
+
+    //     setVouchers(voucherObjArr);
+    //   })
+
+    // get vouchers
+
+    database.collection("voucher").where('__name__', '==' , voucherID).get().then((snapshot) => {
+      const v = snapshot.docs.map((doc) => doc.data());
+      setVouchers(v);
+    });
+  }
   
   return (
     <Container maxWidth="lg">
@@ -85,17 +114,18 @@ function UserRedeem(props) {
                   <QRCode style = {{marginLeft: "50px", marginTop: "50px"}} value = {voucherID} justifyContent="center">
                     </QRCode>
                   </CardActions>
-            </CardContent>
-            </div>
-          </div>
-          <Hidden xsDown>
-            <CardMedia className={classes.cardMedia} image="https://source.unsplash.com/random" title="Image Title" />
-          </Hidden>
-        </Card>
-      </CardActionArea>
-    ))}
-    </Grid>
+              </CardContent>
+              </div>
+              </div>
+                <Hidden xsDown>
+                  <CardMedia className={classes.cardMedia} image="https://source.unsplash.com/random" title="Image Title" />
+                </Hidden>
+          </Card>
+        </CardActionArea>
+      ))}
+      </Grid>
     </Container>
+    
   );
 }
 

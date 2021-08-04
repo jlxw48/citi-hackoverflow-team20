@@ -6,42 +6,48 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useState, useEffect } from 'react';
-import {database} from "../firebase.js"
+import {database} from "../../firebase.js"
 import "react-sidebar-ui/dist/index.css";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import List from "@material-ui/core/List";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import MenuIcon from "@material-ui/icons/Menu";
-import { Link } from "react-router-dom";
 import Navjson from "./Navigation.json";
-import Logo from "./../Asset/citilogo.png";
+import Logo from "../Asset/citilogo.png";
 import StoreIcon from "@material-ui/icons/Store";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import RedeemIcon from "@material-ui/icons/Redeem";
 import "./Navigation.css";
 import HomeIcon from "@material-ui/icons/Home";
-import { PowerInputTwoTone } from "@material-ui/icons";
+import { Redirect, useLocation, useHistory } from "react-router-dom";
 
-const NavigationBar = () => {
+const NavigationBar = (props) => {
   const [open, setOpen] = React.useState(false);
-
-  const [users, setUsers] = useState([])
-  
-  const userRef = database.collection("user")
-
-  function getUsers() {
-    userRef.where("__name__", "==", "tom@gmail.com").get().then((item) => {
-      const items = item.docs.map((doc) => doc.data());
-      setUsers(items);
-      console.log(items)
-    });
-  }
+  const [user, setUser] = useState([]);
+  const location = useLocation();
+  const history = useHistory();
 
   useEffect(() => {
-    getUsers();
-    // eslint-disable-next-line
+    if (!location.state) {
+      return ;
+    } 
+
+    getUserInfo();
   }, []);
+
+  if (!location.state) {
+    return <Redirect to='/'></Redirect>
+  }
+  
+  const userRef = database.collection("user").doc(location.state.userid);
+  function getUserInfo() {
+    userRef.get()
+      .then(docSnapshot => {
+        setUser(docSnapshot.data())
+      })
+  }
+
 
   return (
     <React.Fragment>
@@ -59,11 +65,9 @@ const NavigationBar = () => {
           <Typography inline className="no_deco" variant="h6">
             CitiMall
           </Typography>
-          {users.map((user) => (
           <Typography inline>
             User: {user.name} Loyalty Points: {user.loyalty}
           </Typography>
-          ))}
           </div>
         </Toolbar>
       </AppBar>
@@ -83,7 +87,15 @@ const NavigationBar = () => {
                   onClick={() => itemOnTap(jsonObj.name)}
                   style={{ display: "flex", flexDirection: "row" }}
                 >
-                  <ListItem button component={Link} to={jsonObj.url}>
+                  <ListItem button onClick={() => 
+                          {
+                            console.log(jsonObj.url);
+                            history.push({
+                              pathname: jsonObj.url,
+                              state: { userid: location.state.userid }
+                            })
+                          }
+                        }>
                     <ListItemIcon>
                       {jsonObj.name === Navjson.navigation[0].name ? (
                         <HomeIcon />

@@ -5,12 +5,20 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import BLUE from "../../utils/Color";
 
 export default function InvalidVoucher(props) {
   const classes = props.classes;
-
+  const history = useHistory();
+  const cancelVoucher = () => {
+    history.push({
+      pathname: "/Cashier/Transaction",
+      state: {
+        cashierid: "247d9305-80b0-4530-82ba-5806e21f9b94",
+      },
+    });
+  };
   return (
     <Container className={classes.cardGrid} maxWidth="md">
       <Grid
@@ -57,8 +65,7 @@ export default function InvalidVoucher(props) {
                   <Button
                     variant="contained"
                     style={{ backgroundColor: BLUE, color: "white" }}
-                    component={Link}
-                    to="/cashier/transaction"
+                    onClick={cancelVoucher}
                   >
                     Return to checkout
                   </Button>

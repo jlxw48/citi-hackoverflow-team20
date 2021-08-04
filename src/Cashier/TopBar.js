@@ -2,7 +2,7 @@ import { AppBar, Typography, Button } from "@material-ui/core";
 import React from "react";
 import "react-sidebar-ui/dist/index.css";
 import { Link } from "react-router-dom";
-import BLUE from "./../utils/Color";
+import BLUE from "../utils/Color";
 const TopBar = () => {
   return (
     <React.Fragment>

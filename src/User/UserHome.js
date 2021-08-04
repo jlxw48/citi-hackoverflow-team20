@@ -1,6 +1,6 @@
 import {database} from "../firebase.js"
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect, } from 'react';
+import { Redirect, Link, useLocation, useHistory } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -8,11 +8,10 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Link from '@material-ui/core/Link';
+import NavigationBar from "./components/NavigationBar.js";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -51,9 +50,10 @@ function UserHome() {
   const [vouchers, setVouchers] = useState([])
   const ref = database.collection("voucher")
   const classes = useStyles();
-
-  const userRef = database.collection("user").doc("96da117d-1573-43a2-9b87-7e6cf23d22fc")
-
+  const location = useLocation();
+  const history = useHistory();
+  const userRef = database.collection("user").doc(location.state.userid)
+  const voucherRef = database.collection("voucher")
 
   function getVouchers() {
     ref.where("user", "==", userRef).get().then((item) => {
@@ -65,15 +65,59 @@ function UserHome() {
     });
   }
   useEffect(() => {
+    if (location.state === null) {
+      return
+    }
+    console.log("getting vouchers")
     getVouchers();
     // eslint-disable-next-line
   }, []);
 
+  if (!location.state) {
+    return <Redirect to='/'></Redirect>
+  }
 
+  // async function getVouchers() {
+  //   if (location.state === null) {
+  //     return
+  //   } 
+
+  //   await userRef.get().then(docSnapshot => {
+  //     const vouchers = docSnapshot.data().purchased
+  //     const voucherObjArr = []
+
+  //     vouchers.forEach(async v => {
+  //       console.log(v)
+  //       await voucherRef.doc(v).get().then(doc => {
+  //         console.log(doc, doc.id)
+  //         voucherObjArr.push({
+  //           ...doc.data(),
+  //           id: doc.id
+  //         })
+  //       })
+  //     })
+  //     setVouchers(voucherObjArr);
+  //   });
+  // }
+
+  function moveToShopPg(e) {
+    history.push({
+      pathname: "/citi/shop",
+      state: { userid: location.state.userid },
+    })
+  }
+
+  function moveToRedeemPg(voucherID) {
+    history.push({
+      pathname: "/citi/redeem/" + voucherID,
+      state: { userid: location.state.userid },
+    })
+  }
 
   return (
-
-    <React.Fragment>
+    <div>
+      <NavigationBar />
+      <React.Fragment>
       <CssBaseline />
       <main>
         {/* Hero unit */}
@@ -88,7 +132,7 @@ function UserHome() {
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justifyContent="center">
                 <Grid item>
-                  <Button variant="contained" color="primary" onClick={event =>  window.location.href='/citi/shop'}>
+                  <Button variant="contained" color="primary" onClick={moveToShopPg}>
                     Purchase More Vouchers!
                   </Button>
                 </Grid>
@@ -123,7 +167,7 @@ function UserHome() {
 
 
                   <CardActions>
-                    <Button size="small" color="primary"  onClick={event =>  window.location.href='/citi/redeem/' + voucherID}>
+                    <Button size="small" color="primary"  onClick= {() => moveToRedeemPg(voucherID)}>
                       Redeem
                     </Button>
                   </CardActions>
@@ -137,7 +181,7 @@ function UserHome() {
         </Container>
       </main>
     </React.Fragment>
-
+    </div>
   )
 }
 
