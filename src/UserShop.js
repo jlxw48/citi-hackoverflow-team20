@@ -59,7 +59,7 @@ function UserShop() {
   const refV = database.collection("voucher")
 
   const classes = useStyles();
-  const userRef = database.collection("user").doc("fe82a906-14d5-439f-9d04-61da29cd2707")
+  const userRef = database.collection("user").doc("96da117d-1573-43a2-9b87-7e6cf23d22fc")
 
   function getVouchers() {
     refVT.get().then((item) => {
@@ -90,40 +90,39 @@ function UserShop() {
 
   // };
 
-  // span.onclick = function() {
-  //     modal.style.display = "none";
-  // };
+  span.onclick = function() {
+    modal.style.display = "none";
+};
 
-  // window.onclick = function(event) {
-  //     if (event.target == modal) {
-  //     modal.style.display = "none";
-  //     }
-  // };
+window.onclick = function(event) {
+    if (event.target == modal) {
+    modal.style.display = "none";
+    }
+};
 
   function purchaseVoucher(VT) {
-    // modal.style.display = "block";
-    
-    // get this user's points
-    userRef.get()
-      .then(async docSnapshot => {
-        var points = docSnapshot.data().loyalty
-        console.log(points)
-        console.log(VT.id)
-        var purchased = docSnapshot.data().purchased
-        await userRef.update({
-          loyalty: points - VT.points,
-          purchased: purchased.push(VT.id)
-        })
-      })
+    modal.style.display = "block";
 
-    // add to the voucher collection 
     refV.add({
       name: VT.name,
       details: VT.details,
       user: userRef,
       vouchertype: VT,
       expiry: VT.expiry
-  });   
+    })
+      .then(docRef => {
+        userRef.get()
+        .then(async docSnapshot => {
+          var points = docSnapshot.data().loyalty
+          console.log(points)
+          console.log(VT.id)
+          var purchased = [...docSnapshot.data().purchased, docRef.id]
+          await userRef.update({
+            loyalty: points - VT.points,
+            purchased: purchased
+          })
+        })
+      })
   }
 
   return (
