@@ -7,8 +7,8 @@ import Login from "./Login";
 import QRScan from "./cashier/QRScan";
 import Transaction from "./cashier/Transaction";
 import TopBar from "./cashier/TopBar";
-import ScannedVoucherPage from "./cashier/scannedVoucherPage";
-import UserSignUp from "./User/UserSignUp";
+import UserSignUp from "./UserSignUp";
+import ScannedVoucherPage from "./cashier/ScannedVoucherPage";
 import CashierSignUp from "./CashierSignUp";
 import CashierHome from "./cashier/CashierHome";
 import TransactionComplete from "./cashier/TransactionComplete";
@@ -29,7 +29,7 @@ function App() {
         <Route exact path="/cashier/transaction" component={Transaction} />
         <Route exact path="/citi/homepage" component={UserHome} />
         <Route exact path="/citi/shop" component={UserShop} />
-        <Route exact path="/citi/redeem" component={UserRedeem} />
+        <Route exact path="/citi/redeem/:voucherid/" component={UserRedeem} />
         <Route
           exact
           path="/cashier/voucher/:voucherid/"
