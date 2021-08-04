@@ -2,12 +2,19 @@ import React from "react";
 import Table from "./Table";
 import Button from "@material-ui/core/Button";
 import { Link, useLocation } from "react-router-dom";
+import BLUE from "./../utils/Color";
 
 const Transaction = () => {
   const location = useLocation();
   return (
     <div style={{ width: "90%", marginLeft: "5%", marginRight: "5%" }}>
-      <div style={{ display: "flex", flexDirection: "row" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
         <h2>Transactions</h2>
 
         <Button
@@ -15,12 +22,13 @@ const Transaction = () => {
           to="/cashier/qr"
           variant="contained"
           style={{
-            backgroundColor: "red",
-            marginLeft: "25%",
-            fontWeight: "bolder",
-            marginTop: "5%",
-            marginBottom: "5%",
-            position: "relative",
+            backgroundColor: BLUE,
+            display: "block",
+            marginTop: "1.5em",
+            marginBottom: "1em",
+            fontWeight: "bold",
+            height: "50%",
+            color: "white",
           }}
         >
           QR Scan

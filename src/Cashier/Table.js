@@ -7,6 +7,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { TableFooter } from "@material-ui/core";
+import BLUE from "./../utils/Color";
 
 function createData(name, price) {
   return { name, price };
@@ -42,13 +43,14 @@ export default function BasicTable(props) {
         <TableHead>
           <TableRow
             style={{
-              backgroundColor: "red",
+              backgroundColor: BLUE,
             }}
           >
             <TableCell
               style={{
                 fontWeight: "bold",
                 fontSize: "1em",
+                color: "white",
                 borderRight: "1px solid rgba(224,224,224)",
               }}
             >
@@ -56,7 +58,7 @@ export default function BasicTable(props) {
             </TableCell>
             <TableCell
               align="right"
-              style={{ fontWeight: "bold", fontSize: "1em" }}
+              style={{ fontWeight: "bold", fontSize: "1em", color: "white" }}
             >
               Price ($)
             </TableCell>
