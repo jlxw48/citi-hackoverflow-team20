@@ -45,6 +45,7 @@ function ScannedVoucherPage(props) {
   const [invalidDisplay, setInvalidDisplay] = useState("");
 
   const voucherCollection = database.collection("voucher");
+  const voucherTypeCollection = database.collection("vouchertype");
 
   function getVoucher() {
     setLoading(true);
@@ -54,17 +55,12 @@ function ScannedVoucherPage(props) {
       .then((docSnapshot) => {
         if (docSnapshot.exists) {
           if (validateVoucher(docSnapshot.data())) {
-            docSnapshot
-              .data()
-              .vouchertype.get()
-              .then((doc) => {
-                const voucherDetails = {
-                  ...docSnapshot.data(),
-                  value: doc.data().value,
-                  voucherid: docSnapshot.id,
-                };
-                setVoucher(voucherDetails);
-              });
+            const voucherDetails = {
+              ...docSnapshot.data(),
+              value: docSnapshot.data().vouchertype.value,
+              voucherid: docSnapshot.id,
+            };
+            setVoucher(voucherDetails);
           }
         } else {
           console.log("voucher does not exist");

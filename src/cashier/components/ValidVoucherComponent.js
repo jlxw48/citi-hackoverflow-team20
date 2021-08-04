@@ -100,8 +100,8 @@ export default function ValidVoucher(props) {
                     if (!voucher) {
                       return " null";
                     }
-                    const date = new Date(voucher.expiry.toMillis());
-                    return " " + date.toString();
+                    const date = new Date(voucher.expiry.toMillis()).toLocaleDateString();
+                    return " " + date;
                   })()}
                 </>
               </Typography>
