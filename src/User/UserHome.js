@@ -11,6 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import NavigationBar from "../components/NavigationBar.js";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -51,11 +52,14 @@ function UserHome() {
   const classes = useStyles();
   const location = useLocation();
   const history = useHistory();
+  const userRef = database.collection("user").doc(location.state.userid)
+  const voucherRef = database.collection("voucher")
+
   useEffect(() => {
     if (location.state === null) {
       return
     }
-
+    console.log("getting vouchers")
     getVouchers();
     // eslint-disable-next-line
   }, []);
@@ -64,15 +68,26 @@ function UserHome() {
     return <Redirect to='/'></Redirect>
   }
 
-  const userRef = database.collection("user").doc(location.state.userid)
+  async function getVouchers() {
+    if (location.state === null) {
+      return
+    } 
 
-  function getVouchers() {
-    ref.where("user", "==", userRef).get().then((item) => {
-      const items = item.docs.map((doc) => {
-        const voucher = {...doc.data(), id: doc.id}
-        return voucher;
-      });
-      setVouchers(items);
+    await userRef.get().then(docSnapshot => {
+      const vouchers = docSnapshot.data().purchased
+      const voucherObjArr = []
+
+      vouchers.forEach(async v => {
+        console.log(v)
+        await voucherRef.doc(v).get().then(doc => {
+          console.log(doc, doc.id)
+          voucherObjArr.push({
+            ...doc.data(),
+            id: doc.id
+          })
+        })
+      })
+      setVouchers(voucherObjArr);
     });
   }
 
@@ -84,7 +99,9 @@ function UserHome() {
   }
 
   return (
-    <React.Fragment>
+    <div>
+      <NavigationBar />
+      <React.Fragment>
       <CssBaseline />
       <main>
         {/* Hero unit */}
@@ -148,7 +165,7 @@ function UserHome() {
         </Container>
       </main>
     </React.Fragment>
-
+    </div>
   )
 }
 

@@ -21,27 +21,33 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import RedeemIcon from "@material-ui/icons/Redeem";
 import "./Navigation.css";
 import HomeIcon from "@material-ui/icons/Home";
-import { PowerInputTwoTone } from "@material-ui/icons";
+import { Redirect, useLocation } from "react-router-dom";
 
-const NavigationBar = () => {
+const NavigationBar = (props) => {
   const [open, setOpen] = React.useState(false);
-
-  const [users, setUsers] = useState([])
-  
-  const userRef = database.collection("user")
-
-  function getUsers() {
-    userRef.where("__name__", "==", "tom@gmail.com").get().then((item) => {
-      const items = item.docs.map((doc) => doc.data());
-      setUsers(items);
-      console.log(items)
-    });
-  }
+  const [user, setUser] = useState([]);
+  const location = useLocation();
 
   useEffect(() => {
-    getUsers();
-    // eslint-disable-next-line
+    if (!location.state) {
+      return ;
+    } 
+
+    getUserInfo();
   }, []);
+
+  if (!location.state) {
+    return <Redirect to='/'></Redirect>
+  }
+  
+  const userRef = database.collection("user").doc(location.state.userid);
+  function getUserInfo() {
+    userRef.get()
+      .then(docSnapshot => {
+        setUser(docSnapshot.data())
+      })
+  }
+
 
   return (
     <React.Fragment>
@@ -59,11 +65,9 @@ const NavigationBar = () => {
           <Typography inline className="no_deco" variant="h6">
             CitiMall
           </Typography>
-          {users.map((user) => (
           <Typography inline>
             User: {user.name} Loyalty Points: {user.loyalty}
           </Typography>
-          ))}
           </div>
         </Toolbar>
       </AppBar>

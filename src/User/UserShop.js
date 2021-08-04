@@ -12,6 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import './usershop.css';
 import { Redirect, Link, useLocation } from "react-router-dom";
+import NavigationBar from "../components/NavigationBar.js";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -76,15 +77,17 @@ function UserShop() {
     });
   }
 
-  const buyVoucher = voucherPoints => {
+  const buyVoucher = (voucherPoints, voucherid) => {
     modal.style.display = "block";
     // get this user's points
 
     userRef.get()
       .then(async docSnapshot => {
         var points = docSnapshot.data().loyalty
+        var purchased = docSnapshot.data().purchased
         await userRef.update({
-          loyalty: points - voucherPoints
+          loyalty: points - voucherPoints,
+          purchased: purchased.push(voucherid)
         })
       })
   }
@@ -100,7 +103,10 @@ function UserShop() {
   };
 
   return (
-    <React.Fragment>
+    <div>
+      <NavigationBar userid={location.state.userid}/>
+
+<React.Fragment>
       <CssBaseline />
       <main>
         {/* Hero unit */}
@@ -140,7 +146,7 @@ function UserShop() {
 
 
                   <CardActions>
-                    <Button size="small" color="primary" id="myBtn" onClick={() => buyVoucher(voucher.points)}>
+                    <Button size="small" color="primary" id="myBtn" onClick={() => buyVoucher(voucher.points, voucher.id)}>
                       Purchase
                     </Button>
 
@@ -164,6 +170,8 @@ function UserShop() {
         </Container>
       </main>
     </React.Fragment>
+    </div>
+    
   )
 }
 

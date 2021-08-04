@@ -13,7 +13,6 @@ export default function ValidVoucher(props) {
   const history = useHistory();
   const classes = props.classes;
   const voucher = props.voucher;
-  console.log("hiii", voucher);
 
   const updateVoucherStatus = async () => {
     await database.collection("voucher").doc(voucher.voucherid).update({
