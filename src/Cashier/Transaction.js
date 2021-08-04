@@ -1,11 +1,15 @@
 import React from "react";
 import Table from "./Table";
 import Button from "@material-ui/core/Button";
-import { Link, useLocation } from "react-router-dom";
+import { Redirect, Link, useLocation } from "react-router-dom";
 import BLUE from "./../utils/Color";
 
 const Transaction = () => {
   const location = useLocation();
+  if (!location.state) {
+    return <Redirect to='/'></Redirect>
+  }
+
   return (
     <div style={{ width: "90%", marginLeft: "5%", marginRight: "5%" }}>
       <div
@@ -36,7 +40,7 @@ const Transaction = () => {
       </div>
       <Table
         discount={
-          typeof location.state === "undefined" ? 0 : location.state.data
+          typeof location.state.data === "undefined" ? 0 : location.state.data
         }
       />
     </div>

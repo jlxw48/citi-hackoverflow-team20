@@ -5,10 +5,10 @@ import UserShop from "./UserShop.js";
 import UserRedeem from "./UserRedeem.js";
 import NavigationBar from "./components/NavigationBar";
 import Login from "./Login";
-import QRScan from "./Cashier/QRScan";
-import Transaction from "./Cashier/Transaction";
-import TopBar from "./Cashier/TopBar";
-import ScannedVoucherPage from "./Cashier/scannedVoucherPage";
+import QRScan from "./cashier/QRScan";
+import Transaction from "./cashier/Transaction";
+import TopBar from "./cashier/TopBar";
+import ScannedVoucherPage from "./cashier/ScannedVoucherPage";
 import UserSignUp from "./UserSignUp";
 import CashierSignUp from "./CashierSignUp";
 
