@@ -6,8 +6,9 @@ import BLUE from "../utils/Color";
 
 const Transaction = () => {
   const location = useLocation();
+
   if (!location.state) {
-    return <Redirect to='/'></Redirect>
+    return <Redirect to="/"></Redirect>;
   }
 
   return (
