@@ -91,12 +91,10 @@ const Login = (props) => {
             });
           } else {
             history.push({
-              pathname: "/cashier/transaction",
+              pathname: "/cashier/homepage",
               state: { cashierid: doc.id },
             });
           }
-
-          
         });
       })
       .catch((error) => console.log(error.message));

@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { database } from "../../firebase.js";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import BLUE from "../../utils/Color";
 
 export default function ValidVoucher(props) {
@@ -19,6 +19,15 @@ export default function ValidVoucher(props) {
     await database.collection("voucher").doc(voucher.voucherid).update({
       status: false,
     });
+    history.push({
+      pathname: "/Cashier/Transaction",
+      state: {
+        cashierid: "247d9305-80b0-4530-82ba-5806e21f9b94",
+      },
+    });
+  };
+
+  const cancelVoucher = () => {
     history.push({
       pathname: "/Cashier/Transaction",
       state: {
@@ -136,8 +145,7 @@ export default function ValidVoucher(props) {
                   <Button
                     variant="outlined"
                     color="primary"
-                    component={Link}
-                    to="/cashier/transaction"
+                    onClick={cancelVoucher}
                   >
                     Cancel
                   </Button>

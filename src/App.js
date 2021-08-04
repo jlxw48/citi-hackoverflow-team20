@@ -1,17 +1,17 @@
 import "./App.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import UserHome from "./UserHome.js";
-import UserShop from "./UserShop.js";
-import UserRedeem from "./UserRedeem.js";
+import UserHome from "./User/UserHome";
+import UserShop from "./User/UserShop";
+import UserRedeem from "./User/UserRedeem";
 import NavigationBar from "./components/NavigationBar";
 import Login from "./Login";
-import QRScan from "./cashier/QRScan";
-import Transaction from "./cashier/Transaction";
-import TopBar from "./cashier/TopBar";
-import ScannedVoucherPage from "./cashier/ScannedVoucherPage";
-import UserSignUp from "./UserSignUp";
+import QRScan from "./Cashier/QRScan";
+import Transaction from "./Cashier/Transaction";
+import TopBar from "./Cashier/TopBar";
+import ScannedVoucherPage from "./Cashier/scannedVoucherPage";
+import UserSignUp from "./User/UserSignUp";
 import CashierSignUp from "./CashierSignUp";
-
+import CashierHome from "./Cashier/CashierHome";
 
 function App() {
   return (
@@ -24,6 +24,8 @@ function App() {
 
         <Route path="/cashier" component={TopBar} />
         <Route exact path="/cashier/qr" component={QRScan} />
+        <Route exact path="/cashier/homepage" component={CashierHome} />
+
         <Route exact path="/cashier/transaction" component={Transaction} />
         <Route exact path="/citi/homepage" component={UserHome} />
         <Route exact path="/citi/shop" component={UserShop} />
