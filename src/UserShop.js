@@ -53,14 +53,17 @@ var span = document.getElementsByClassName("close")[0];
 
 function UserShop() {
   const [vouchers, setVouchers] = useState([])
-  const ref = database.collection("voucher")
-  const ref2 = database.collection("user")
+
+  const refVT = database.collection("vouchertype")
+  const refUser = database.collection("user")
+  const refV = database.collection("voucher")
+
   const classes = useStyles();
   const userRef = database.collection("user").doc("tom@gmail.com")
 
 
   function getVouchers() {
-    ref.get().then((item) => {
+    refVT.get().then((item) => {
       const items = item.docs.map((doc) => doc.data());
       setVouchers(items);
       console.log(items)
@@ -73,11 +76,11 @@ function UserShop() {
 
   btn.onclick = function() {
     modal.style.display = "block";
-    ref2.doc("tom@gmail.com").update({loyalty: 38});
+    refUser.doc("tom@gmail.com").update({loyalty: 38});
     // need change to decrement instead of fixed number update
 
     // add purchased voucher under the user's name
-    ref.add({
+    refV.add({
         name:'voucher4',
         details:'amazing',
         user: userRef
