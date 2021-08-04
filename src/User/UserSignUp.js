@@ -12,7 +12,7 @@ import {database, auth} from "../firebase.js"
 import { v4 as uuidv4 } from 'uuid';
 import { Toast, ToastContainer } from "react-bootstrap";
 
-const bcrypt = require('bcryptjs')
+const bcrypt = require("bcryptjs");
 const saltRounds = 10;
 
 const useStyles = makeStyles((theme) => ({
@@ -38,55 +38,63 @@ const useStyles = makeStyles((theme) => ({
 const UserSignUp = (e) => {
   const history = useHistory();
   const classes = useStyles();
-  const [formData, setFormData] = useState({})
-  const [showUserExistsToast, setUserExistsToast] = useState(false)
+  const [formData, setFormData] = useState({});
+  const [showUserExistsToast, setUserExistsToast] = useState(false);
   const closeToast = () => setUserExistsToast(false);
 
   const signupSubmit = async (event) => {
     event.preventDefault();
     console.log(formData);
 
-    await database.collection('user')
-      .where('email', '==', formData.email)
+    await database
+      .collection("user")
+      .where("email", "==", formData.email)
       .get()
       .then(async (snapshots) => {
         if (!snapshots.empty) {
-          setUserExistsToast(true)
-          return
-        } 
-
-        const hash = bcrypt.hashSync(formData.password, bcrypt.genSaltSync(saltRounds));
-        const uuid = uuidv4();
-    
-        const userData = {
-            name: formData.name,
-            email: formData.email,
-            loyalty: 0,
-            purchased: [],
-            hash: hash
+          setUserExistsToast(true);
+          return;
         }
-    
-        await database.collection('user')
-            .doc(uuid)
-            .set(userData)
-            .catch(error => {
-                console.log('Something went wrong with added user to firestore: ', error);
-            })
-    
+
+        const hash = bcrypt.hashSync(
+          formData.password,
+          bcrypt.genSaltSync(saltRounds)
+        );
+        const uuid = uuidv4();
+
+        const userData = {
+          name: formData.name,
+          email: formData.email,
+          loyalty: 0,
+          purchased: [],
+          hash: hash,
+        };
+
+        await database
+          .collection("user")
+          .doc(uuid)
+          .set(userData)
+          .catch((error) => {
+            console.log(
+              "Something went wrong with added user to firestore: ",
+              error
+            );
+          });
+
         history.push("/");
-      })
+      });
   };
-  
+
   const handleChange = (e) => {
     setFormData({
-        ...formData,
-        [e.target.name]: e.target.value.trim()
-    })
-  }
+      ...formData,
+      [e.target.name]: e.target.value.trim(),
+    });
+  };
 
   return (
     <Container component="main" maxWidth="xs">
-      <ToastContainer position='top-end'>
+      <ToastContainer position="top-end">
         <Toast show={showUserExistsToast} onClose={closeToast}>
           <Toast.Header>
             <strong className="me-auto">Signup Failed!</strong>
@@ -97,55 +105,55 @@ const UserSignUp = (e) => {
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+          <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-            Sign up
+          Sign up
         </Typography>
         <form className={classes.form} onSubmit={signupSubmit} noValidate>
-            <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="name"
-                label="Name"
-                name="name"
-                autoComplete="name"
-                onChange={handleChange}
-             />
-            <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                onChange={handleChange}
-             />
-            <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                onChange={handleChange}
-            />
-            <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-            >
-                Sign Up
-            </Button>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="name"
+            label="Name"
+            name="name"
+            autoComplete="name"
+            onChange={handleChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            onChange={handleChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            onChange={handleChange}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            Sign Up
+          </Button>
         </form>
       </div>
     </Container>

@@ -10,7 +10,7 @@ import TopBar from "./cashier/TopBar";
 import ScannedVoucherPage from "./cashier/ScannedVoucherPage";
 import UserSignUp from "./User/UserSignUp";
 import CashierSignUp from "./CashierSignUp";
-
+import CashierHome from "./cashier/CashierHome";
 
 function App() {
   return (
@@ -22,6 +22,8 @@ function App() {
 
         <Route path="/cashier" component={TopBar} />
         <Route exact path="/cashier/qr" component={QRScan} />
+        <Route exact path="/cashier/homepage" component={CashierHome} />
+
         <Route exact path="/cashier/transaction" component={Transaction} />
         <Route exact path="/citi/homepage" component={UserHome} />
         <Route exact path="/citi/shop" component={UserShop} />

@@ -30,12 +30,12 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(8),
   },
   card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
   },
   cardMedia: {
-    paddingTop: '56.25%', // 16:9
+    paddingTop: "56.25%", // 16:9
   },
   cardContent: {
     flexGrow: 1,
@@ -101,6 +101,7 @@ function UserShop() {
           })
         })
       })
+      
   }
 
   const closeModal = () => {
@@ -123,14 +124,24 @@ function UserShop() {
         {/* Hero unit */}
         <div className={classes.heroContent}>
           <Container maxWidth="sm">
-            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+            <Typography
+              component="h1"
+              variant="h2"
+              align="center"
+              color="textPrimary"
+              gutterBottom
+            >
               Shop Vouchers
             </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
-              Purchase vouchers below! 
+            <Typography
+              variant="h5"
+              align="center"
+              color="textSecondary"
+              paragraph
+            >
+              Purchase vouchers below!
             </Typography>
-            <div className={classes.heroButtons}>
-            </div>
+            <div className={classes.heroButtons}></div>
           </Container>
         </div>
 
@@ -140,7 +151,6 @@ function UserShop() {
             {vouchers.map((VT) => (
               <Grid item xs={12} sm={6} md={4}>
                 <Card className={classes.voucher}>
-
                   <CardMedia
                     className={classes.cardMedia}
                     image="https://source.unsplash.com/random"
@@ -167,12 +177,9 @@ function UserShop() {
                         </div>
                     </div>
                   </CardActions>
-
                 </Card>
-
               </Grid>
             ))}
-
           </Grid>
         </Container>
       </main>
@@ -181,6 +188,5 @@ function UserShop() {
     
   )
 }
-
 
 export default UserShop;
