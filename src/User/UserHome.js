@@ -1,5 +1,6 @@
-import {database} from "./firebase.js"
+import {database} from "../firebase.js"
 import React, { useState, useEffect } from 'react';
+
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -53,6 +54,7 @@ function UserHome() {
 
   const userRef = database.collection("user").doc("tom@gmail.com")
 
+
   function getVouchers() {
     ref.where("user", "==", userRef).get().then((item) => {
       const items = item.docs.map((doc) => {
@@ -66,6 +68,7 @@ function UserHome() {
     getVouchers();
     // eslint-disable-next-line
   }, []);
+
 
 
   return (
@@ -93,8 +96,6 @@ function UserHome() {
             </div>
           </Container>
         </div>
-
-
 
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
@@ -136,6 +137,7 @@ function UserHome() {
         </Container>
       </main>
     </React.Fragment>
+
   )
 }
 
