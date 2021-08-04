@@ -9,12 +9,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Hidden from '@material-ui/core/Hidden';
 import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import QRCode from "qrcode.react"
-
-
-
 
 const useStyles = makeStyles((theme) => ({
   card: {

@@ -1,15 +1,15 @@
 import "./App.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import UserHome from "./UserHome.js";
-import UserShop from "./UserShop.js";
-import UserRedeem from "./UserRedeem.js";
+import UserHome from "./User/UserHome.js";
+import UserShop from "./User/UserShop.js";
+import UserRedeem from "./User/UserRedeem.js";
 import NavigationBar from "./components/NavigationBar";
 import Login from "./Login";
 import QRScan from "./cashier/QRScan";
 import Transaction from "./cashier/Transaction";
 import TopBar from "./cashier/TopBar";
 import ScannedVoucherPage from "./cashier/ScannedVoucherPage";
-import UserSignUp from "./UserSignUp";
+import UserSignUp from "./User/UserSignUp";
 import CashierSignUp from "./CashierSignUp";
 
 

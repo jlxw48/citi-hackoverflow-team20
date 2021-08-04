@@ -1,6 +1,6 @@
 import {database} from "../firebase.js"
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect, } from 'react';
+import { Redirect, Link, useLocation, useHistory } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -8,11 +8,9 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -51,9 +49,22 @@ function UserHome() {
   const [vouchers, setVouchers] = useState([])
   const ref = database.collection("voucher")
   const classes = useStyles();
+  const location = useLocation();
+  const history = useHistory();
+  useEffect(() => {
+    if (location.state === null) {
+      return
+    }
 
-  const userRef = database.collection("user").doc("tom@gmail.com")
+    getVouchers();
+    // eslint-disable-next-line
+  }, []);
 
+  if (!location.state) {
+    return <Redirect to='/'></Redirect>
+  }
+
+  const userRef = database.collection("user").doc(location.state.userid)
 
   function getVouchers() {
     ref.where("user", "==", userRef).get().then((item) => {
@@ -64,15 +75,15 @@ function UserHome() {
       setVouchers(items);
     });
   }
-  useEffect(() => {
-    getVouchers();
-    // eslint-disable-next-line
-  }, []);
 
-
+  function moveToShopPg(e) {
+    history.push({
+      pathname: "/citi/shop",
+      state: { userid: location.state.userid },
+    })
+  }
 
   return (
-
     <React.Fragment>
       <CssBaseline />
       <main>
@@ -88,7 +99,7 @@ function UserHome() {
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justifyContent="center">
                 <Grid item>
-                  <Button variant="contained" color="primary" onClick={event =>  window.location.href='/citi/shop'}>
+                  <Button variant="contained" color="primary" onClick={moveToShopPg}>
                     Purchase More Vouchers!
                   </Button>
                 </Grid>

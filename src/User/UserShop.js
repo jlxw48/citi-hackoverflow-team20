@@ -1,4 +1,4 @@
-import {database} from "./firebase.js"
+import {database} from "../firebase.js"
 import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -7,12 +7,11 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Link from '@material-ui/core/Link';
 import './usershop.css';
+import { Redirect, Link, useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -46,55 +45,59 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-var modal = document.getElementById("myModal");
-var btn = document.getElementById("myBtn");
-var span = document.getElementsByClassName("close")[0];
-
-
 function UserShop() {
   const [vouchers, setVouchers] = useState([])
-  const ref = database.collection("voucher")
-  const ref2 = database.collection("user")
+  const [loading, setLoading] = useState(true)
+  const location = useLocation();
   const classes = useStyles();
-  const userRef = database.collection("user").doc("tom@gmail.com")
-
-
-  function getVouchers() {
-    ref.get().then((item) => {
-      const items = item.docs.map((doc) => doc.data());
-      setVouchers(items);
-      console.log(items)
-    });
-  }
 
   useEffect(() => {
+    if (!location.state) {
+      return ;
+    } 
+
     getVouchers();
   }, []);
 
-  btn.onclick = function() {
-    modal.style.display = "block";
-    ref2.doc("tom@gmail.com").update({loyalty: 38});
-    // need change to decrement instead of fixed number update
+  if (!location.state) {
+    return <Redirect to='/'></Redirect>
+  }
 
-    // add purchased voucher under the user's name
-    ref.add({
-        name:'voucher4',
-        details:'amazing',
-        user: userRef
+  const voucherRef = database.collection("vouchertype")
+  const userRef = database.collection("user").doc(location.state.userid)
+  var modal = document.getElementById("myModal");
+
+  async function getVouchers() {
+    await voucherRef.get().then((item) => {
+      const items = item.docs.map((doc) => doc.data());
+      setVouchers(items);
+      console.log("vouchers", items)
+      setLoading(false)
     });
+  }
 
+  const buyVoucher = voucherPoints => {
+    modal.style.display = "block";
+    // get this user's points
 
+    userRef.get()
+      .then(async docSnapshot => {
+        var points = docSnapshot.data().loyalty
+        await userRef.update({
+          loyalty: points - voucherPoints
+        })
+      })
+  }
+
+  const closeModal = () => {
+    modal.style.display = "none";
+  }
+
+  window.onclick = function(event) {
+      if (event.target === modal) {
+      modal.style.display = "none";
+      }
   };
-
-span.onclick = function() {
-    modal.style.display = "none";
-};
-
-window.onclick = function(event) {
-    if (event.target == modal) {
-    modal.style.display = "none";
-    }
-};
 
   return (
     <React.Fragment>
@@ -114,8 +117,6 @@ window.onclick = function(event) {
           </Container>
         </div>
 
-
-
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={5}>
@@ -133,19 +134,19 @@ window.onclick = function(event) {
                         <div key={voucher.id}>
                         <h2>{voucher.name}</h2>
                         <p>{voucher.details}</p>
-                        <p>Expiry Date: {new Date(voucher.expiry.seconds*1000).toLocaleDateString()}</p>
+                        <p>Expiry Date: {new Date(voucher.expiry).toLocaleDateString()}</p>
                         </div>
                   </CardContent>
 
 
                   <CardActions>
-                    <Button size="small" color="primary" id="myBtn">
+                    <Button size="small" color="primary" id="myBtn" onClick={() => buyVoucher(voucher.points)}>
                       Purchase
                     </Button>
 
                     <div id="myModal" class="modal">
                         <div class="modal-content">
-                            <span class="close">&times;</span>
+                            <span class="close" onClick={closeModal}>&times;</span>
                             <p>Voucher Purchased!</p>
                         </div>
 
