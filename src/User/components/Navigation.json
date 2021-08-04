@@ -9,10 +9,6 @@
       "url": "/citi/shop"
     },
     {
-      "name": "Redeem Vouchers",
-      "url": "/citi/redeem"
-    },
-    {
       "name": "Logout",
       "url": "/"
     }

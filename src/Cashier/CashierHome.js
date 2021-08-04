@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import { useHistory, Redirect, useLocation } from "react-router-dom";
-import BLUE from "./../utils/Color";
+import BLUE from "../utils/Color";
 const CashierHome = () => {
   const history = useHistory();
   const location = useLocation();
