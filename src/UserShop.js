@@ -61,12 +61,13 @@ function UserShop() {
   const classes = useStyles();
   const userRef = database.collection("user").doc("tom@gmail.com")
 
-
   function getVouchers() {
     refVT.get().then((item) => {
-      const items = item.docs.map((doc) => doc.data());
+      const items = item.docs.map((doc) => {
+        const voucher = {...doc.data(), id: doc.id}
+        return voucher;
+      });
       setVouchers(items);
-      console.log(items)
     });
   }
 
@@ -74,30 +75,39 @@ function UserShop() {
     getVouchers();
   }, []);
 
-  btn.onclick = function() {
-    modal.style.display = "block";
-    refUser.doc("tom@gmail.com").update({loyalty: 38});
-    // need change to decrement instead of fixed number update
+  // btn.onclick = function() {
+  //   modal.style.display = "block";
+  //   refUser.doc("tom@gmail.com").update({loyalty: 38});
+  //   // need change to decrement instead of fixed number update
 
-    // add purchased voucher under the user's name
+  //   // add purchased voucher under the user's name
+  //   refV.add({
+  //       name:'voucher4',
+  //       details:'amazing',
+  //       user: userRef
+  //   });
+
+
+  // };
+
+  // span.onclick = function() {
+  //     modal.style.display = "none";
+  // };
+
+  // window.onclick = function(event) {
+  //     if (event.target == modal) {
+  //     modal.style.display = "none";
+  //     }
+  // };
+
+  function purchaseVoucher(VT) {
     refV.add({
-        name:'voucher4',
-        details:'amazing',
-        user: userRef
-    });
-
-
-  };
-
-span.onclick = function() {
-    modal.style.display = "none";
-};
-
-window.onclick = function(event) {
-    if (event.target == modal) {
-    modal.style.display = "none";
-    }
-};
+        name: VT.name,
+        details: VT.details,
+        user: userRef,
+        vouchertype: VT
+    });   
+  }
 
   return (
     <React.Fragment>
@@ -142,7 +152,7 @@ window.onclick = function(event) {
 
 
                   <CardActions>
-                    <Button size="small" color="primary" id="myBtn">
+                    <Button size="small" color="primary" id="myBtn" onClick={purchaseVoucher(voucher)}>
                       Purchase
                     </Button>
 
