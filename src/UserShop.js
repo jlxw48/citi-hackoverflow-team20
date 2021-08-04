@@ -59,7 +59,7 @@ function UserShop() {
   const refV = database.collection("voucher")
 
   const classes = useStyles();
-  const userRef = database.collection("user").doc("tom@gmail.com")
+  const userRef = database.collection("user").doc("fe82a906-14d5-439f-9d04-61da29cd2707")
 
   function getVouchers() {
     refVT.get().then((item) => {
@@ -101,12 +101,29 @@ function UserShop() {
   // };
 
   function purchaseVoucher(VT) {
+    // modal.style.display = "block";
+    
+    // get this user's points
+    userRef.get()
+      .then(async docSnapshot => {
+        var points = docSnapshot.data().loyalty
+        console.log(points)
+        console.log(VT.id)
+        var purchased = docSnapshot.data().purchased
+        await userRef.update({
+          loyalty: points - VT.points,
+          purchased: purchased.push(VT.id)
+        })
+      })
+
+    // add to the voucher collection 
     refV.add({
-        name: VT.name,
-        details: VT.details,
-        user: userRef,
-        vouchertype: VT
-    });   
+      name: VT.name,
+      details: VT.details,
+      user: userRef,
+      vouchertype: VT,
+      expiry: VT.expiry
+  });   
   }
 
   return (
@@ -152,7 +169,7 @@ function UserShop() {
 
 
                   <CardActions>
-                    <Button size="small" color="primary" id="myBtn" onClick={purchaseVoucher(voucher)}>
+                    <Button size="small" color="primary" id="myBtn" onClick={() => purchaseVoucher(voucher)}>
                       Purchase
                     </Button>
 
