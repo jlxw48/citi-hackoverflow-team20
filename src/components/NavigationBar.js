@@ -5,7 +5,8 @@ import {
   IconButton,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useState, useEffect } from 'react';
+import {database} from "../firebase.js"
 import "react-sidebar-ui/dist/index.css";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import List from "@material-ui/core/List";
@@ -20,9 +21,27 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import RedeemIcon from "@material-ui/icons/Redeem";
 import "./Navigation.css";
 import HomeIcon from "@material-ui/icons/Home";
+import { PowerInputTwoTone } from "@material-ui/icons";
 
 const NavigationBar = () => {
   const [open, setOpen] = React.useState(false);
+
+  const [users, setUsers] = useState([])
+  
+  const userRef = database.collection("user")
+
+  function getUsers() {
+    userRef.where("__name__", "==", "tom@gmail.com").get().then((item) => {
+      const items = item.docs.map((doc) => doc.data());
+      setUsers(items);
+      console.log(items)
+    });
+  }
+
+  useEffect(() => {
+    getUsers();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <React.Fragment>
@@ -36,10 +55,16 @@ const NavigationBar = () => {
           >
             <MenuIcon />
           </IconButton>
-
-          <Typography className="no_deco" variant="h6">
+          <div>
+          <Typography inline className="no_deco" variant="h6">
             CitiMall
           </Typography>
+          {users.map((user) => (
+          <Typography inline>
+            User: {user.name} Loyalty Points: {user.loyalty}
+          </Typography>
+          ))}
+          </div>
         </Toolbar>
       </AppBar>
       <SwipeableDrawer

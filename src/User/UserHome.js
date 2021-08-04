@@ -1,4 +1,4 @@
-import {database} from "./firebase.js"
+import {database} from "../firebase.js"
 import React, { useState, useEffect } from 'react';
 
 import Button from '@material-ui/core/Button';
@@ -52,14 +52,16 @@ function UserHome() {
   const ref = database.collection("voucher")
   const classes = useStyles();
 
-const userRef = database.collection("user").doc("tom@gmail.com")
+  const userRef = database.collection("user").doc("tom@gmail.com")
 
 
   function getVouchers() {
     ref.where("user", "==", userRef).get().then((item) => {
-      const items = item.docs.map((doc) => doc.data());
+      const items = item.docs.map((doc) => {
+        const voucher = {...doc.data(), id: doc.id}
+        return voucher;
+      });
       setVouchers(items);
-      console.log(items)
     });
   }
   useEffect(() => {
@@ -86,7 +88,7 @@ const userRef = database.collection("user").doc("tom@gmail.com")
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justifyContent="center">
                 <Grid item>
-                  <Button variant="contained" color="primary">
+                  <Button variant="contained" color="primary" onClick={event =>  window.location.href='/citi/shop'}>
                     Purchase More Vouchers!
                   </Button>
                 </Grid>
@@ -98,7 +100,10 @@ const userRef = database.collection("user").doc("tom@gmail.com")
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={5}>
-            {vouchers.map((voucher) => (
+            {vouchers.map((voucher) => {
+              const voucherID = voucher.id
+              return (
+              
               <Grid item xs={12} sm={6} md={4}>
                 <Card className={classes.voucher}>
 
@@ -112,13 +117,13 @@ const userRef = database.collection("user").doc("tom@gmail.com")
                         <div key={voucher.id}>
                         <h2>{voucher.name}</h2>
                         <p>{voucher.details}</p>
-                        <p>Expiry Date: {new Date(voucher.expiry.seconds*1000).toLocaleDateString()}</p>
+                        {/* <p>Expiry Date: {new Date(voucher.expiry.seconds*1000).toLocaleDateString()}</p> */}
                         </div>
                   </CardContent>
 
 
                   <CardActions>
-                    <Button size="small" color="primary">
+                    <Button size="small" color="primary"  onClick={event =>  window.location.href='/citi/redeem/' + voucherID}>
                       Redeem
                     </Button>
                   </CardActions>
@@ -126,7 +131,7 @@ const userRef = database.collection("user").doc("tom@gmail.com")
                 </Card>
 
               </Grid>
-            ))}
+            )})}
 
           </Grid>
         </Container>
