@@ -82,7 +82,7 @@ function UserRedeem(props) {
               </Typography>
                   <CardActions>
                   <br></br>
-                  <QRCode style = {{marginLeft: "50px", marginTop: "50px"}} value = "0.4" justifyContent="center">
+                  <QRCode style = {{marginLeft: "50px", marginTop: "50px"}} value = {voucherID} justifyContent="center">
                     </QRCode>
                   </CardActions>
             </CardContent>

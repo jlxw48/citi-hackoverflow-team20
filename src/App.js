@@ -27,7 +27,7 @@ function App() {
         <Route exact path="/cashier/transaction" component={Transaction} />
         <Route exact path="/citi/homepage" component={UserHome} />
         <Route exact path="/citi/shop" component={UserShop} />
-        <Route exact path="/citi/redeem" component={UserRedeem} />
+        <Route exact path="/citi/redeem/:voucherid/" component={UserRedeem} />
         <Route
           exact
           path="/cashier/voucher/:voucherid/"

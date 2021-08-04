@@ -1,6 +1,5 @@
-import {database} from "../firebase.js"
+import {database} from "./firebase.js"
 import React, { useState, useEffect } from 'react';
-
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -13,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
+import './usershop.css';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -46,17 +46,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+var modal = document.getElementById("myModal");
+var btn = document.getElementById("myBtn");
+var span = document.getElementsByClassName("close")[0];
 
-function UserHome() {
+
+function UserShop() {
   const [vouchers, setVouchers] = useState([])
-  const ref = database.collection("voucher")
-  const classes = useStyles();
 
+  const refVT = database.collection("vouchertype")
+  const refUser = database.collection("user")
+  const refV = database.collection("voucher")
+
+  const classes = useStyles();
   const userRef = database.collection("user").doc("96da117d-1573-43a2-9b87-7e6cf23d22fc")
 
-
   function getVouchers() {
-    ref.where("user", "==", userRef).get().then((item) => {
+    refVT.get().then((item) => {
       const items = item.docs.map((doc) => {
         const voucher = {...doc.data(), id: doc.id}
         return voucher;
@@ -64,15 +70,62 @@ function UserHome() {
       setVouchers(items);
     });
   }
+
   useEffect(() => {
     getVouchers();
-    // eslint-disable-next-line
   }, []);
 
+  // btn.onclick = function() {
+  //   modal.style.display = "block";
+  //   refUser.doc("tom@gmail.com").update({loyalty: 38});
+  //   // need change to decrement instead of fixed number update
 
+  //   // add purchased voucher under the user's name
+  //   refV.add({
+  //       name:'voucher4',
+  //       details:'amazing',
+  //       user: userRef
+  //   });
+
+
+  // };
+  span.onclick = function() {
+    modal.style.display = "none";
+};
+
+  window.onclick = function(event) {
+      if (event.target == modal) {
+      modal.style.display = "none";
+      }
+  };
+
+
+  function purchaseVoucher(VT) {
+    modal.style.display = "block";
+
+    refV.add({
+      name: VT.name,
+      details: VT.details,
+      user: userRef,
+      vouchertype: VT,
+      expiry: VT.expiry
+    })
+      .then(docRef => {
+        userRef.get()
+        .then(async docSnapshot => {
+          var points = docSnapshot.data().loyalty
+          console.log(points)
+          console.log(VT.id)
+          var purchased = [...docSnapshot.data().purchased, docRef.id]
+          await userRef.update({
+            loyalty: points - VT.points,
+            purchased: purchased
+          })
+        })
+      })
+  }
 
   return (
-
     <React.Fragment>
       <CssBaseline />
       <main>
@@ -80,30 +133,22 @@ function UserHome() {
         <div className={classes.heroContent}>
           <Container maxWidth="sm">
             <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-              My Vouchers
+              Shop Vouchers
             </Typography>
             <Typography variant="h5" align="center" color="textSecondary" paragraph>
-              View your purchased vouchers below! 
+              Purchase vouchers below! 
             </Typography>
             <div className={classes.heroButtons}>
-              <Grid container spacing={2} justifyContent="center">
-                <Grid item>
-                  <Button variant="contained" color="primary" onClick={event =>  window.location.href='/citi/shop'}>
-                    Purchase More Vouchers!
-                  </Button>
-                </Grid>
-              </Grid>
             </div>
           </Container>
         </div>
 
+
+
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={5}>
-            {vouchers.map((voucher) => {
-              const voucherID = voucher.id
-              return (
-              
+            {vouchers.map((voucher) => (
               <Grid item xs={12} sm={6} md={4}>
                 <Card className={classes.voucher}>
 
@@ -117,29 +162,38 @@ function UserHome() {
                         <div key={voucher.id}>
                         <h2>{voucher.name}</h2>
                         <p>{voucher.details}</p>
-                        {/* <p>Expiry Date: {new Date(voucher.expiry.seconds*1000).toLocaleDateString()}</p> */}
+                        <p>Expiry Date: {new Date(voucher.expiry.seconds*1000).toLocaleDateString()}</p>
                         </div>
                   </CardContent>
 
 
                   <CardActions>
-                    <Button size="small" color="primary"  onClick={event =>  window.location.href='/citi/redeem/' + voucherID}>
-                      Redeem
+                    <Button size="small" color="primary" id="myBtn" onClick={() => purchaseVoucher(voucher)}>
+                      Purchase
                     </Button>
+
+                    <div id="myModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <p>Voucher Purchased!</p>
+                        </div>
+
+                    </div>
+
+
                   </CardActions>
 
                 </Card>
 
               </Grid>
-            )})}
+            ))}
 
           </Grid>
         </Container>
       </main>
     </React.Fragment>
-
   )
 }
 
 
-export default UserHome;
+export default UserShop;
