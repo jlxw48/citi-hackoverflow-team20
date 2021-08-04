@@ -49,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 function UserShop() {
   const [vouchers, setVouchers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loyalty, setLoyalty] = useState(true);
   const location = useLocation();
   const classes = useStyles();
 
@@ -58,22 +59,33 @@ function UserShop() {
     }
 
     getVouchers();
+    getLoyalty();
   }, []);
 
   if (!location.state) {
     return <Redirect to="/"></Redirect>;
   }
 
+
   const voucherTypeRef = database.collection("vouchertype");
   const refV = database.collection("voucher");
   const userRef = database.collection("user").doc(location.state.userid);
   var modal = document.getElementById("myModal");
+
 
   async function getVouchers() {
     await voucherTypeRef.get().then((item) => {
       const items = item.docs.map((doc) => doc.data());
       setVouchers(items);
       console.log("vouchers", items);
+      setLoading(false);
+    });
+  }
+
+  async function getLoyalty() {
+    await userRef.get().then((doc) => {
+      console.log(doc.data())
+      setLoyalty(doc.data().loyalty)
       setLoading(false);
     });
   }
@@ -113,6 +125,31 @@ function UserShop() {
       modal.style.display = "none";
     }
   };
+
+  function purchaseVoucher(VT) {
+    modal.style.display = "block";
+
+    refV.add({
+      name: VT.name,
+      details: VT.details,
+      user: userRef,
+      vouchertype: VT,
+      expiry: VT.expiry
+    })
+      .then(docRef => {
+        userRef.get()
+        .then(async docSnapshot => {
+          var points = docSnapshot.data().loyalty
+          console.log(points)
+          console.log(VT.id)
+          var purchased = [...docSnapshot.data().purchased, docRef.id]
+          await userRef.update({
+            loyalty: points - VT.points,
+            purchased: purchased
+          })
+        })
+      })
+  }
 
   return (
     <div>
@@ -161,6 +198,8 @@ function UserShop() {
                       <div key={VT.id}>
                         <h2>{VT.name}</h2>
                         <p>{VT.details}</p>
+                        <p>Loyalty Points: {VT.points}</p>
+                        <p>Value: {VT.value}% OFF</p>
                         <p>
                           Expiry Date:{" "}
                           {new Date(VT.expiry).toLocaleDateString()}
@@ -169,14 +208,34 @@ function UserShop() {
                     </CardContent>
 
                     <CardActions>
-                      <Button
-                        size="small"
-                        color="primary"
-                        id="myBtn"
-                        onClick={() => purchaseVoucher(VT)}
-                      >
-                        Purchase
-                      </Button>
+
+                    <> 
+                      {(() => {
+                        if (VT.points <= loyalty) {
+
+                          return <Button
+                            size="small"
+                            color="primary"
+                            id="myBtn"
+                            onClick={() => purchaseVoucher(VT)}
+                            >
+                              Purchase
+                          </Button>
+                        }
+                        else {
+                          return <Button
+                            size="small"
+                            color="primary"
+                            id="myBtn"
+                            disabled
+                            >
+                              Purchase
+                          </Button>
+                        }
+                      })()}
+                      </>
+
+
 
                       <div id="myModal" class="modal">
                         <div class="modal-content">
