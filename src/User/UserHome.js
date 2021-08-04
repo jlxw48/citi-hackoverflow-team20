@@ -77,29 +77,6 @@ function UserHome() {
     return <Redirect to='/'></Redirect>
   }
 
-  // async function getVouchers() {
-  //   if (location.state === null) {
-  //     return
-  //   } 
-
-  //   await userRef.get().then(docSnapshot => {
-  //     const vouchers = docSnapshot.data().purchased
-  //     const voucherObjArr = []
-
-  //     vouchers.forEach(async v => {
-  //       console.log(v)
-  //       await voucherRef.doc(v).get().then(doc => {
-  //         console.log(doc, doc.id)
-  //         voucherObjArr.push({
-  //           ...doc.data(),
-  //           id: doc.id
-  //         })
-  //       })
-  //     })
-  //     setVouchers(voucherObjArr);
-  //   });
-  // }
-
   function moveToShopPg(e) {
     history.push({
       pathname: "/citi/shop",
@@ -161,7 +138,7 @@ function UserHome() {
                         <div key={voucher.id}>
                         <h2>{voucher.name}</h2>
                         <p>{voucher.details}</p>
-                        {/* <p>Expiry Date: {new Date(voucher.expiry.seconds*1000).toLocaleDateString()}</p> */}
+                        <p>Expiry Date: {new Date(voucher.expiry.toMillis()).toLocaleDateString()}</p>
                         </div>
                   </CardContent>
 
