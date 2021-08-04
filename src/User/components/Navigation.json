@@ -2,7 +2,7 @@
   "navigation": [
     {
       "name": "Homepage",
-      "url": "/citi/userhomepage"
+      "url": "/citi/homepage"
     },
     {
       "name": "User Shop",

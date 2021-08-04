@@ -51,49 +51,52 @@ const Login = (props) => {
   const closeToast = () => setLoginFailedToast(false);
 
   const loginSubmit = (event) => {
-    if (collection === "cashier") history.push("/cashier/transaction");
-    if (collection === "user") {
-      event.preventDefault();
-      console.log("logging in");
-      console.log(formData.email);
+    event.preventDefault();
 
-      console.log(collection);
+    if (!formData.email && !formData.password) {
+      return;
+    }
 
-      // get password hash from firebase
-      database
-        .collection(collection)
-        .where("email", "==", formData.email)
-        .get()
-        .then((snapshot) => {
-          console.log("snapshotting", snapshot);
+    // get password hash from firebase
+    database
+      .collection(collection)
+      .where("email", "==", formData.email)
+      .get()
+      .then((snapshot) => {
+        console.log("snapshotting", snapshot);
 
-          if (snapshot.empty) {
-            console.log("No matching documents.");
+        if (snapshot.empty) {
+          console.log("No matching documents.");
+          setLoginFailedToast(true);
+          return;
+        }
+
+        snapshot.forEach((doc) => {
+          // compare hash with hash of input password
+          const validPassword = bcrypt.compareSync(
+            formData.password,
+            doc.data().hash
+          );
+
+          if (!validPassword) {
             setLoginFailedToast(true);
             return;
           }
 
-          snapshot.forEach((doc) => {
-            // compare hash with hash of input password
-            const validPassword = bcrypt.compareSync(
-              formData.password,
-              doc.data().hash
-            );
-
-            if (!validPassword) {
-              setLoginFailedToast(true);
-              console.log("hi toast");
-              return;
-            }
-
+          if (collection === "user") {
             history.push({
               pathname: "/citi/homepage",
               state: { userid: doc.id },
             });
-          });
-        })
-        .catch((error) => console.log(error.message));
-    }
+          } else {
+            history.push({
+              pathname: "/cashier/homepage",
+              state: { cashierid: doc.id },
+            });
+          }
+        });
+      })
+      .catch((error) => console.log(error.message));
   };
 
   const handleChange = (e) => {
