@@ -8,8 +8,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useHistory } from "react-router-dom";
-import { database, auth } from "./../firebase.js";
-import { v4 as uuidv4 } from "uuid";
+import {database, auth} from "../firebase.js"
+import { v4 as uuidv4 } from 'uuid';
 import { Toast, ToastContainer } from "react-bootstrap";
 
 const bcrypt = require("bcryptjs");

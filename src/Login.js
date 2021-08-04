@@ -52,10 +52,10 @@ const Login = (props) => {
 
   const loginSubmit = (event) => {
     event.preventDefault();
-    console.log("logging in");
-    console.log(formData.email);
 
-    console.log(collection);
+    if (!formData.email && !formData.password) {
+      return;
+    }
 
     // get password hash from firebase
     database
@@ -80,7 +80,6 @@ const Login = (props) => {
 
           if (!validPassword) {
             setLoginFailedToast(true);
-            console.log("hi toast");
             return;
           }
 
