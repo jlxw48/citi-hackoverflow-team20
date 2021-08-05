@@ -50,29 +50,6 @@ function UserRedeem(props) {
   const voucherRef = database.collection("voucher")
 
   function getVouchers() {
-    // get vouchers which belong to a user
-    // userRef.get()
-    //   .then(docSnapshot => {
-    //     const vouchers = docSnapshot.data().purchased
-    //     const voucherObjArr = []
-
-    //     // get the voucher data
-    //     vouchers.forEach(async v => {
-    //       console.log(v)
-    //       await voucherRef.doc(v).get().then(doc => {
-    //         console.log(doc, doc.id)
-    //         voucherObjArr.push({
-    //           ...doc.data(),
-    //           id: doc.id
-    //         })
-    //       })
-    //     })
-
-    //     setVouchers(voucherObjArr);
-    //   })
-
-    // get vouchers
-
     database.collection("voucher").where('__name__', '==' , voucherID).get().then((snapshot) => {
       const v = snapshot.docs.map((doc) => doc.data());
       setVouchers(v);
@@ -80,10 +57,11 @@ function UserRedeem(props) {
   }
   
   return (
-    <Container maxWidth="lg">
+    <div>
+      <NavigationBar userid={location.state.userid} />
+      <Container maxWidth="lg">
     <Grid item xs={12} lg={12}>
       {vouchers.map((voucher) => (
-      <CardActionArea component="a" href="#">
         <Card className={classes.card}>
           <div className={classes.cardDetails}>
           <div key={voucher.id}>
@@ -121,120 +99,11 @@ function UserRedeem(props) {
                   <CardMedia className={classes.cardMedia} image="https://source.unsplash.com/random" title="Image Title" />
                 </Hidden>
           </Card>
-        </CardActionArea>
       ))}
       </Grid>
     </Container>
-    
+    </div>
   );
 }
 
-// 
-
-//   return (
-//     <div>
-//       <h2>REDEEM</h2>
-//           {loading ? <h1>Loading...</h1> : null}
-//           {users.map((user) => (
-//             <div key={user.email}>
-//               <h2>{user.email}</h2>
-//               <p>{user.loyalty}</p>
-//               <p>{user.name}</p>
-//               {/* <p>{user.purchased}</p> */}
-//               </div>
-//             ))}
-//     </div>
-//   )
-// }
-
-
 export default UserRedeem;
-
-
-// import PropTypes from 'prop-types';
-// import { makeStyles } from '@material-ui/core/styles';
-// import Paper from '@material-ui/core/Paper';
-// import Typography from '@material-ui/core/Typography';
-// import Grid from '@material-ui/core/Grid';
-// import Link from '@material-ui/core/Link';
-
-// const useStyles = makeStyles((theme) => ({
-//   mainFeaturedPost: {
-//     position: 'relative',
-//     backgroundColor: theme.palette.grey[800],
-//     color: theme.palette.common.white,
-//     marginBottom: theme.spacing(4),
-//     backgroundImage: 'url(https://source.unsplash.com/random)',
-//     backgroundSize: 'cover',
-//     backgroundRepeat: 'no-repeat',
-//     backgroundPosition: 'center',
-//   },
-//   overlay: {
-//     position: 'absolute',
-//     top: 0,
-//     bottom: 0,
-//     right: 0,
-//     left: 0,
-//     backgroundColor: 'rgba(0,0,0,.3)',
-//   },
-//   mainFeaturedPostContent: {
-//     position: 'relative',
-//     padding: theme.spacing(3),
-//     [theme.breakpoints.up('md')]: {
-//       padding: theme.spacing(6),
-//       paddingRight: 0,
-//     },
-//   },
-// }));
-
-// function UserRedeem() {
-//   const classes = useStyles();
-
-//   const [vouchers, setVouchers] = useState([])
-//   const ref = database.collection("voucher")
-  
-//   const userRef = database.collection("user").doc("tom@gmail.com")
-
-//   function getVouchers() {
-//     ref.where("user", "==", userRef).get().then((item) => {
-//       const items = item.docs.map((doc) => doc.data());
-//       setVouchers(items);
-//       console.log(items)
-//     });
-//   }
-//   useEffect(() => {
-//     getVouchers();
-//     // eslint-disable-next-line
-//   }, []);
-
-
-//   return (
-//     <Paper className={classes.mainFeaturedPost} style={{ backgroundImage: 'url(https://source.unsplash.com/random)'}}>
-//       {/* Increase the priority of the hero background image */}
-//       {<img style={{ display: 'none' }} src='url(https://source.unsplash.com/random)' alt="Image"/>}
-//       <div className={classes.overlay} />
-//       <Grid container>
-//         {vouchers.map((voucher) => (
-//         <div key={voucher.id}>
-//         <Grid item md={6}>
-//           <div className={classes.mainFeaturedPostContent}>
-//             <Typography component="h1" variant="h3" color="inherit" gutterBottom>
-//               {voucher.name}
-//             </Typography>
-//             <Typography variant="h5" color="inherit" paragraph>
-//               {voucher.details}
-//             </Typography>
-//             <Link variant="subtitle1" href="#">
-//               Terms and Conditions
-//             </Link>
-//           </div>
-//         </Grid>
-//         </div>
-//         ))}
-//       </Grid>
-//     </Paper>
-    
-//   );
-// }
-
-// export default UserRedeem;
