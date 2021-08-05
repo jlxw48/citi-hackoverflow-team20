@@ -11,7 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import "./usershop.css";
-import { Redirect, useLocation } from "react-router-dom";
+import { Redirect, useLocation, useHistory } from "react-router-dom";
 import NavigationBar from "./components/NavigationBar.js";
 
 const useStyles = makeStyles((theme) => ({
@@ -51,6 +51,7 @@ function UserShop() {
   const [loading, setLoading] = useState(true);
   const [loyalty, setLoyalty] = useState(true);
   const location = useLocation();
+  const history = useHistory();
   const classes = useStyles();
 
   useEffect(() => {
@@ -119,13 +120,8 @@ function UserShop() {
   const closeModal = () => {
     var modal = document.getElementById("myModal");
     modal.style.display = "none";
-  };
 
-  window.onclick = function (event) {
-    var modal = document.getElementById("myModal");
-    if (event.target === modal) {
-      modal.style.display = "none";
-    }
+    history.go(0)
   };
 
   return (
