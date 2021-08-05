@@ -70,7 +70,6 @@ function UserShop() {
   const voucherTypeRef = database.collection("vouchertype");
   const refV = database.collection("voucher");
   const userRef = database.collection("user").doc(location.state.userid);
-  var modal = document.getElementById("myModal");
 
 
   async function getVouchers() {
@@ -91,6 +90,7 @@ function UserShop() {
   }
 
   function purchaseVoucher(VT) {
+    var modal = document.getElementById("myModal");
     modal.style.display = "block";
 
     refV
@@ -117,39 +117,16 @@ function UserShop() {
   }
 
   const closeModal = () => {
+    var modal = document.getElementById("myModal");
     modal.style.display = "none";
   };
 
   window.onclick = function (event) {
+    var modal = document.getElementById("myModal");
     if (event.target === modal) {
       modal.style.display = "none";
     }
   };
-
-  function purchaseVoucher(VT) {
-    modal.style.display = "block";
-
-    refV.add({
-      name: VT.name,
-      details: VT.details,
-      user: userRef,
-      vouchertype: VT,
-      expiry: VT.expiry
-    })
-      .then(docRef => {
-        userRef.get()
-        .then(async docSnapshot => {
-          var points = docSnapshot.data().loyalty
-          console.log(points)
-          console.log(VT.id)
-          var purchased = [...docSnapshot.data().purchased, docRef.id]
-          await userRef.update({
-            loyalty: points - VT.points,
-            purchased: purchased
-          })
-        })
-      })
-  }
 
   return (
     <div>
@@ -234,8 +211,6 @@ function UserShop() {
                         }
                       })()}
                       </>
-
-
 
                       <div id="myModal" class="modal">
                         <div class="modal-content">
