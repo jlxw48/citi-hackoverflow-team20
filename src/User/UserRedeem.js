@@ -46,9 +46,6 @@ function UserRedeem(props) {
     return <Redirect to='/'></Redirect>
   }
 
-  const userRef = database.collection("user").doc(location.state.userid)
-  const voucherRef = database.collection("voucher")
-
   function getVouchers() {
     database.collection("voucher").where('__name__', '==' , voucherID).get().then((snapshot) => {
       const v = snapshot.docs.map((doc) => doc.data());
@@ -70,7 +67,6 @@ function UserRedeem(props) {
                 {voucher.name}
               </Typography>
               <Typography variant="subtitle1" color="textSecondary">
-              {/* Expiry Date: {new Date(voucher.expiry.seconds*1000).toLocaleDateString()} */}
               </Typography>
               <Typography variant="subtitle1" paragraph>
                 {voucher.details}
