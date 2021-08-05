@@ -21,7 +21,7 @@ export default function ValidVoucher(props) {
     history.push({
       pathname: "/Cashier/Transaction",
       state: {
-        cashierid: "247d9305-80b0-4530-82ba-5806e21f9b94",
+        data: voucher.value,
       },
     });
   };
@@ -30,7 +30,7 @@ export default function ValidVoucher(props) {
     history.push({
       pathname: "/Cashier/Transaction",
       state: {
-        data: voucher.value,
+        cashierid: "247d9305-80b0-4530-82ba-5806e21f9b94",
       },
     });
   };
@@ -100,7 +100,9 @@ export default function ValidVoucher(props) {
                     if (!voucher) {
                       return " null";
                     }
-                    const date = new Date(voucher.expiry.toMillis()).toLocaleDateString();
+                    const date = new Date(
+                      voucher.expiry.toMillis()
+                    ).toLocaleDateString();
                     return " " + date;
                   })()}
                 </>
