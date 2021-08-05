@@ -74,21 +74,7 @@ function UserShop() {
   useEffect(() => {
     getVouchers();
   }, []);
-
-  // btn.onclick = function() {
-  //   modal.style.display = "block";
-  //   refUser.doc("tom@gmail.com").update({loyalty: 38});
-  //   // need change to decrement instead of fixed number update
-
-  //   // add purchased voucher under the user's name
-  //   refV.add({
-  //       name:'voucher4',
-  //       details:'amazing',
-  //       user: userRef
-  //   });
-
-
-  // };
+  
   span.onclick = function() {
     modal.style.display = "none";
 };
@@ -114,8 +100,6 @@ function UserShop() {
         userRef.get()
         .then(async docSnapshot => {
           var points = docSnapshot.data().loyalty
-          console.log(points)
-          console.log(VT.id)
           var purchased = [...docSnapshot.data().purchased, docRef.id]
           await userRef.update({
             loyalty: points - VT.points,

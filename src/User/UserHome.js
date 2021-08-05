@@ -68,7 +68,6 @@ function UserHome() {
     if (location.state === null) {
       return
     }
-    console.log("getting vouchers")
     getVouchers();
     // eslint-disable-next-line
   }, []);

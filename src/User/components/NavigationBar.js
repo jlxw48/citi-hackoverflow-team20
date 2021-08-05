@@ -89,7 +89,6 @@ const NavigationBar = (props) => {
                 >
                   <ListItem button onClick={() => 
                           {
-                            console.log(jsonObj.url);
                             history.push({
                               pathname: jsonObj.url,
                               state: { userid: location.state.userid }

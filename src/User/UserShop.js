@@ -84,7 +84,6 @@ function UserShop() {
 
   async function getLoyalty() {
     await userRef.get().then((doc) => {
-      console.log(doc.data())
       setLoyalty(doc.data().loyalty)
       setLoading(false);
     });
@@ -106,8 +105,6 @@ function UserShop() {
       .then((docRef) => {
         userRef.get().then(async (docSnapshot) => {
           var points = docSnapshot.data().loyalty;
-          console.log(points);
-          console.log(VT.id);
           var purchased = [...docSnapshot.data().purchased, docRef.id];
           await userRef.update({
             loyalty: points - VT.points,

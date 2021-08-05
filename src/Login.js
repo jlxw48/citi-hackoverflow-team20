@@ -63,8 +63,6 @@ const Login = (props) => {
       .where("email", "==", formData.email)
       .get()
       .then((snapshot) => {
-        console.log("snapshotting", snapshot);
-
         if (snapshot.empty) {
           console.log("No matching documents.");
           setLoginFailedToast(true);

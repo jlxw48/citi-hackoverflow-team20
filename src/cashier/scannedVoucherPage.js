@@ -73,7 +73,6 @@ function ScannedVoucherPage(props) {
     if (voucher === null) {
       return false;
     }
-    console.log(voucher);
     if (voucher.expiry) {
       if (voucher.expiry.toMillis() < Date.now()) {
         setInvalidDisplay("Voucher has expired");

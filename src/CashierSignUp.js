@@ -44,7 +44,6 @@ const CashierSignUp = (e) => {
 
   const signupSubmit = async (event) => {
     event.preventDefault();
-    console.log(formData);
 
     await database.collection('cashier')
       .where('email', '==', formData.email)

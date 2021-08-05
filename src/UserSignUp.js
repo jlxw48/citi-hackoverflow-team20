@@ -44,8 +44,6 @@ const UserSignUp = (e) => {
 
   const signupSubmit = async (event) => {
     event.preventDefault();
-    console.log(formData);
-
     await database
       .collection("user")
       .where("email", "==", formData.email)
