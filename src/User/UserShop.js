@@ -172,7 +172,7 @@ function UserShop() {
                         <p>Value: {VT.value}% OFF</p>
                         <p>
                           Expiry Date:{" "}
-                          {new Date(VT.expiry).toLocaleDateString()}
+                          {new Date(VT.expiry.toMillis()).toLocaleDateString()}
                         </p>
                       </div>
                     </CardContent>
